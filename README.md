@@ -99,9 +99,8 @@ cd sam2 && pip install -e .
 
 Download Base Inpainting Model
 ```bash
-huggingface-cli download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP
-
---local-dir ./CogVideoX-Fun-V1.5-5b-InP
+huggingface-cli download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP \
+    --local-dir ./CogVideoX-Fun-V1.5-5b-InP
 ```
 
 The inference and training scripts expect it at `./CogVideoX-Fun-V1.5-5b-InP` relative to the repo root by default.
