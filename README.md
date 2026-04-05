@@ -83,11 +83,6 @@ Install Base Requirements
 pip install -r requirements.txt
 ```
 
-ARM64 Users (Ubuntu 24.04)
-Install the custom decord binary required for AArch64 systems:
-```bash
-pip install https://github.com/chappa-ai-llc/void-model/releases/download/v1.0.0-offline-arm64/decord-0.6.0-cp312-cp312-linux_aarch64.whl
-```
 Offline VLM Reasoning (Gemma 4)
 This fork uses local weights instead of the Gemini API. Download the reasoning model:
 ```bash
