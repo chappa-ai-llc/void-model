@@ -2,7 +2,11 @@
 <img src="assets/void-logo-web.png" width="195" />
 </div>
 
-# VOID: Video Object and Interaction Deletion
+# VOID: Video Object and Interaction Deletion (Chappa AI Offline Edition)
+
+**Optimized for Offline Inference | ARM64 Support | DGX Spark Integrated**
+
+This is an enhanced distribution of the Netflix VOID model. Unlike the original, this version is designed to run in **completely offline environments** by replacing cloud-based APIs with local **Gemma 4-31B** reasoning and providing pre-compiled binaries for ARM64/Ubuntu 24.04 systems.
 
 <div style="line-height: 1;">
   <a href="https://void-model.github.io/" target="_blank" style="margin: 2px;">
@@ -74,28 +78,35 @@ For more control over the pipeline (custom videos, Pass 2 refinement, mask gener
 
 ## ⚙️ Setup
 
+Install Base Requirements
 ```bash
 pip install -r requirements.txt
 ```
 
-Stage 1 of the mask pipeline uses Gemini via the Google AI API. Set your API key:
-
+ARM64 Users (Ubuntu 24.04)
+Install the custom decord binary required for AArch64 systems:
 ```bash
-export GEMINI_API_KEY=your_key_here
+pip install https://github.com/chappa-ai-llc/void-model/releases/download/v1.0.0-offline-arm64/decord-0.6.0-cp312-cp312-linux_aarch64.whl
 ```
+Offline VLM Reasoning (Gemma 4)
+This fork uses local weights instead of the Gemini API. Download the reasoning model:
+```bash
+huggingface-cli download google/gemma-4-31b-it
+```
+(No Google AI API Key required for this fork)
 
-Also install [SAM2](https://github.com/facebookresearch/sam2?tab=readme-ov-file#installation) separately (required for mask generation):
-
+Install SAM2
+SAM2 is required for the initial mask segmentation:
 ```bash
 git clone https://github.com/facebookresearch/sam2.git
 cd sam2 && pip install -e .
 ```
 
-Download the pretrained base inpainting model from HuggingFace:
-
+Download Base Inpainting Model
 ```bash
-hf download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP \
-    --local-dir ./CogVideoX-Fun-V1.5-5b-InP
+huggingface-cli download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP
+
+--local-dir ./CogVideoX-Fun-V1.5-5b-InP
 ```
 
 The inference and training scripts expect it at `./CogVideoX-Fun-V1.5-5b-InP` relative to the repo root by default.
