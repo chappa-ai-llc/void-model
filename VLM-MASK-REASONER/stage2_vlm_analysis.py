@@ -605,31 +605,25 @@ EDIT INSTRUCTION: {instruction}
 
 
 def call_vlm_with_images_and_video(client, model: str, image_data_urls: list,
-                                    video_data_url: str, prompt: str) -> str:
-    """Call VLM with multiple images and video"""
+                                    video_data_url: str, prompt: str,
+                                    backend_type: str = "gemini") -> str:
     content = []
-
-    # Add all images first
+    # Add all grid images (Local models love these)
     for img_url in image_data_urls:
         content.append({"type": "image_url", "image_url": {"url": img_url}})
 
-    # Add video
-    content.append({"type": "image_url", "image_url": {"url": video_data_url}})
+    # ONLY add the heavy video URL if using Gemini; local backends 
+    # like Ollama are much more stable with just the grid frames.
+    if backend_type == "gemini":
+        content.append({"type": "image_url", "image_url": {"url": video_data_url}})
 
-    # Add prompt
     content.append({"type": "text", "text": prompt})
 
     resp = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": "You are an expert video analyst with deep understanding of physics and object interactions. Always output valid JSON only."
-            },
-            {
-                "role": "user",
-                "content": content
-            },
+            {"role": "system", "content": "You are an expert video analyst. Output valid JSON only."},
+            {"role": "user", "content": content},
         ],
     )
     return resp.choices[0].message.content
@@ -872,10 +866,11 @@ def process_video(video_info: Dict, client, model: str):
     prompt = make_vlm_analysis_prompt(instruction, grid_rows, grid_cols,
                                        has_multi_frame_grids=use_multi_frame_grids)
 
-    try:
+try:
         try:
             raw_response = call_vlm_with_images_and_video(
-                client, model, image_data_urls, video_data_url, prompt
+                client, model, image_data_urls, video_data_url, prompt,
+                backend_type=getattr(client, "chappa_backend", "gemini")
             )
         except Exception as e:
             # If multi-frame fails (likely payload size issue), fall back to single frame
@@ -890,7 +885,8 @@ def process_video(video_info: Dict, client, model: str):
 
                 try:
                     raw_response = call_vlm_with_images_and_video(
-                        client, model, image_data_urls, video_data_url, prompt
+                        client, model, image_data_urls, video_data_url, prompt,
+                        backend_type=getattr(client, "chappa_backend", "gemini")
                     )
                     print(f"   ✓ Single-frame fallback succeeded")
                 except Exception as e2:
@@ -934,7 +930,7 @@ def process_video(video_info: Dict, client, model: str):
         return None
 
 
-def process_config(config_path: str, model: str = DEFAULT_MODEL):
+def process_config(args, model: str = DEFAULT_MODEL):
     """Process all videos in config"""
     config_path = Path(config_path)
 
@@ -962,10 +958,20 @@ def process_config(config_path: str, model: str = DEFAULT_MODEL):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY environment variable not set")
-    client = openai.OpenAI(
-        api_key=api_key,
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    )
+    if args.analysis_self_host_type == "gemini":
+        api_key = os.environ.get("GEMINI_API_KEY")
+        base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    elif args.analysis_self_host_type == "ollama":
+        base_url = f"http://{args.analysis_self_host_server}:{args.analysis_self_host_port or 11434}/v1"
+        api_key = "ollama"
+    elif args.analysis_self_host_type == "llama.cpp":
+        base_url = f"http://{args.analysis_self_host_server}:{args.analysis_self_host_port or 8080}/v1"
+        api_key = "sk-no-key-required"
+    else: # vLLM
+        base_url = f"http://{args.analysis_self_host_server}:{args.analysis_self_host_port or 8000}/v1"
+        api_key = "vllm-key"
+
+    client = openai.OpenAI(api_key=api_key, base_url=base_url)
 
     # Process each video
     results = []
@@ -1013,9 +1019,13 @@ def main():
     parser = argparse.ArgumentParser(description="Stage 2: VLM Analysis")
     parser.add_argument("--config", required=True, help="Config JSON from Stage 1")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="VLM model name")
+    parser.add_argument("--analysis-self-host-type", choices=["gemini", "ollama", "llama.cpp", "vllm"], default="gemini", help="Backend type")
+    parser.add_argument("--analysis-self-host-server", default="127.0.0.1", help="Server IP")
+    parser.add_argument("--analysis-self-host-port", type=int, help="Server Port")
+    parser.add_argument("--analysis-self-host-model", help="Model name on local server")
     args = parser.parse_args()
 
-    process_config(args.config, args.model)
+    process_config(args, args.model)
 
 
 if __name__ == "__main__":
