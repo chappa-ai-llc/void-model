@@ -866,7 +866,7 @@ def process_video(video_info: Dict, client, model: str):
     prompt = make_vlm_analysis_prompt(instruction, grid_rows, grid_cols,
                                        has_multi_frame_grids=use_multi_frame_grids)
 
-try:
+    try:
         try:
             raw_response = call_vlm_with_images_and_video(
                 client, model, image_data_urls, video_data_url, prompt,
