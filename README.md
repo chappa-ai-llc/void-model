@@ -2,6 +2,7 @@
 <img src="assets/void-logo-web.png" width="195" />
 </div>
 
+# WORK IN PROGRESS - COMING SOON #
 # VOID: Video Object and Interaction Deletion (Chappa AI Offline Edition)
 
 **Optimized for Offline Inference | ARM64 Support | DGX Spark Integrated**
