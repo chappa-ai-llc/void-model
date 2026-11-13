@@ -121,8 +121,10 @@ head of `main` on 2026-11-13). At that commit SAM2 loads its checkpoint with
 
 ## Known items left open
 
-- None in the code or dependencies as of 2026-11-13. The run on the target waits for the owner's approval of
-  the task `void-model-target-check` (board A-02); the checks above ran on CPU under Python 3.13, x86.
+- None in the code or dependencies as of 2026-11-13.
+- The target check passed on sparky-1 on 2026-11-13 (BUILD office task `void-model-target-check`, run 350, tag
+  v1.2.1-offline-arm64): Python 3.12.3 on aarch64, the 143-wheel hash lock installed, `pip check` clean, tests
+  26/26, torch 2.14.1+cu130 with CUDA 13.0 on the NVIDIA GB10, and the CUDA smoke test OK.
 
 ## Checking it yourself
 
