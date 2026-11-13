@@ -106,7 +106,8 @@ It was assessed against the Security Self-Check standard on 2026-11-13: `conform
 | Version in any answer | none |
 
 Streamlit cannot send security headers (CSP, frame protection, `nosniff`), and the tool has no sign-in.
-Both are accepted for a single-user tool on loopback. Board decision D-01 covers whether to do more.
+The owner accepted both on 2026-11-13 (board D-01, option a; issue #3). They are recorded exceptions
+in the conformance file, to be re-assessed by 2027-02-11, or as soon as the tool is hosted anywhere but loopback.
 
 ## Notebook
 

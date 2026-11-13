@@ -1,61 +1,5 @@
 {
-  "cards": [
-    {
-      "id": "X-01",
-      "kind": "decided",
-      "filed": "2026-11-13",
-      "checked": "2026-11-13",
-      "urgency": "whenever",
-      "blocking": "no",
-      "title": "Security sweep: patched dependencies, unsafe loading fixed, dead web API removed",
-      "plain": "All 82 open advisories (5 critical, 43 high) are fixed by upgrading 7 packages, and the code no longer loads untrusted pickles or checkpoints unsafely.",
-      "chosen": "Pillow 13.0.0, torch 2.14.1 / torchvision 0.29.1, transformers 5.21.1, diffusers 0.42.1, accelerate 1.15.0, datasets 5.1.0, requests 2.34.2 (each release at least two weeks old, 0 OSV advisories across all 144 resolved packages). `torch.load` always uses `weights_only=True`; pickles go through a restricted loader; `trust_remote_code` removed. The unauthenticated FastAPI/Gradio code in `videox_fun/api` and `videox_fun/ui` was deleted: it was not importable (missing `controller` module), and it let any caller load any model path, fetch any URL and read any file. The notebook now clones this repo instead of upstream's vulnerable pins. Details: `docs/SECURITY.md`.",
-      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC \u00a76.1). Removing broken, unreachable network code is safer than hardening it.",
-      "if_ignored": "Nothing to do: confirm, or overturn if you want a demo UI back (it would be rebuilt with a login and the self-check page).",
-      "issue": 1
-    },
-    {
-      "id": "X-02",
-      "kind": "decided",
-      "filed": "2026-11-13",
-      "checked": "2026-11-13",
-      "urgency": "whenever",
-      "blocking": "no",
-      "title": "The Streamlit review tool was assessed against the Security Self-Check standard",
-      "plain": "void-model has no hosted web front end. Its one web page, a local review tool, was assessed in full.",
-      "chosen": "`conformance/void-model.toml` in `security-self-check` covers the Streamlit physics review tool in `data_generation/`, from the code and a live run on 2026-11-13: 12 yes, 9 no, 84 n/a. It listens on 127.0.0.1 only. Other web sites cannot rebind it or open its WebSocket (403 on both, `server.allowedHosts` and the Origin check). It leaks no version and no file. The 9 no rows are the security headers Streamlit cannot send (CSP, frame protection, nosniff and four more) and the lack of a sign-in; D-01 asks what to do about them.",
-      "why": "The standard covers every web front end (STANDARD.md \u00a71.1). Assessing the one page is more honest than calling the repo out of scope.",
-      "if_ignored": "Nothing to do: confirm, or overturn with a note."
-    },
-    {
-      "id": "D-01",
-      "kind": "decision",
-      "filed": "2026-11-13",
-      "checked": "2026-11-13",
-      "urgency": "whenever",
-      "blocking": "no",
-      "title": "Streamlit review tool: accept the missing headers and sign-in, or do more?",
-      "plain": "The local review tool cannot send security headers and has no sign-in. Other web sites are already blocked from it.",
-      "why": "Self-check rows hdr-csp, hdr-framing, hdr-nosniff, hdr-referrer, hdr-permissions, hdr-coop, hdr-corp and auth-api-gated are **no** in `conformance/void-model.toml` (see X-02). The tool runs only on the machine where someone starts it, for curating synthetic training data.",
-      "options": [
-        {
-          "key": "a",
-          "text": "Accept as is: loopback only, no sign-in, no self-check page. Re-assess in 90 days or if the tool is ever hosted."
-        },
-        {
-          "key": "b",
-          "text": "Put a small local reverse proxy in front of it that adds the headers. It adds a moving part for one user."
-        },
-        {
-          "key": "c",
-          "text": "Retire the web tool. The physics config is edited by hand or with a command-line script instead."
-        }
-      ],
-      "recommended": "a",
-      "if_ignored": "Option a stays in force: the tool keeps working as now, on loopback.",
-      "issue": 3
-    }
-  ],
+  "cards": [],
   "phases": [
     {
       "id": "SEC-unmaintained-kubric-666400",
@@ -96,6 +40,15 @@
       "pct": 100,
       "status": "done",
       "note": "Gone from the report on 2026-11-13. 60 advisories: GHSA-332p-7hrc-92wf, GHSA-5x8w-8jj5-q52h, GHSA-8g5g-8vmr-9782, GHSA-v9pv-5gc8-w2m6, GHSA-w889-685w-c8fh, GHSA-22hg-r758-rrw9 (+54); fixed in 13.0.0, 12.3.0, 12.1.1, 12.2.0. Due 2026-11-15 (critical: 2 days from first tracked)."
+    },
+    {
+      "id": "S4",
+      "label": "Re-assess the Streamlit review tool's accepted self-check exceptions (headers, sign-in; D-01 a)",
+      "note": "security-self-check conformance/void-model.toml; void-model#3",
+      "start": "2027-01-28",
+      "end": "2027-02-11",
+      "status": "planned",
+      "pct": 0
     },
     {
       "id": "SEC-diffusers-07b866",
