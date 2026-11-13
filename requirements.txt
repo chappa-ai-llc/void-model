@@ -23,9 +23,8 @@ scikit-image==0.25.2
 imageio==2.37.0
 imageio-ffmpeg==0.6.0
 mediapy==1.2.4
-decord==0.6.0 ; platform_machine != 'aarch64'
-# Custom ARM64 build for Ubuntu 24.04
-decord @ https://github.com/chappa-ai-llc/void-model/releases/download/v1.0.0-offline-arm64/decord-0.6.0-cp312-cp312-linux_aarch64.whl#sha256=22c1b634a5241677c9d103f9426504729c76151fe841ba90a0d8ea58be4e84dd ; platform_machine == 'aarch64'
+# Video decoding for the training loaders (replaces unmaintained decord; FFmpeg is in the wheel)
+av==19.0.1
 kornia==0.8.1
 albumentations==2.0.8
 timm==1.0.19

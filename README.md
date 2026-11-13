@@ -7,7 +7,7 @@
 
 **Optimized for Offline Inference | ARM64 Support | DGX Spark Integrated**
 
-This is an enhanced distribution of the Netflix VOID model. Unlike the original, this version is designed to run in **completely offline environments** by replacing cloud-based APIs with local **Gemma 4-31B** reasoning and providing pre-compiled binaries for ARM64/Ubuntu 24.04 systems.
+This is an enhanced distribution of the Netflix VOID model. Unlike the original, this version is designed to run in **completely offline environments** by replacing cloud-based APIs with local **Gemma 4-31B** reasoning and installing on ARM64/Ubuntu 24.04 from standard wheels only (video decoding uses PyAV in place of decord, which had no ARM64 build).
 
 <div style="line-height: 1;">
   <a href="https://void-model.github.io/" target="_blank" style="margin: 2px;">
@@ -94,10 +94,10 @@ hf download google/gemma-4-31b-it
 (No Google AI API Key required for this fork)
 
 Install SAM2
-SAM2 is required for the initial mask segmentation:
+SAM2 is required for the initial mask segmentation. SAM2 publishes no release tags, so install it pinned to a commit (the head of its `main` branch on 2026-11-13, dated 2024-12-16):
 ```bash
 git clone https://github.com/facebookresearch/sam2.git
-cd sam2 && pip install -e .
+cd sam2 && git checkout 2b90b9f5ceec907a1c18123530e92e794ad901a4 && pip install -e .
 ```
 
 Download Base Inpainting Model
@@ -401,11 +401,13 @@ A pre-configured `physics_config.json` is included specifying which objects are 
 
 Generates counterfactual videos using [Kubric](https://github.com/google-research/kubric) with Google Scanned Objects. Objects are launched at a target; removing them alters the target's physics trajectory. No external dataset download required — assets are fetched from Google Cloud Storage.
 
+Kubric runs in its own Docker image, pinned by digest. See [data_generation/README.md](data_generation/README.md#kubric-pipeline-object-only-counterfactuals) for the exact command, for example:
+
 ```bash
 cd data_generation
-pip install kubric pybullet imageio imageio-ffmpeg
-
-python kubric_variable_objects.py --num_pairs 200 --resolution 384
+docker run --rm --user "$(id -u):$(id -g)" --volume "$(pwd):/kubric" --workdir /kubric \
+  kubricdockerhub/kubruntu@sha256:a4152c8066ffbd7bd303e4ea79c3ce250f190368cb07479fb6763308f165a17f \
+  python3 kubric_variable_objects.py --num_pairs 200 --resolution 384
 ```
 
 #### Training Data Format

@@ -3,6 +3,19 @@
 All notable changes to the Chappa AI offline edition of VOID. Versions are tagged on `main` as
 `v<semver>-offline-arm64`.
 
+## 1.2.0-offline-arm64 — 2026-11-13
+
+### Changed
+- Video decoding in the training loaders uses PyAV (`av==19.0.1`) instead of decord, which has had no release
+  since 2021 and needed this project's custom ARM64 wheel. `videox_fun/utils/video_reader.py` keeps decord's
+  interface. Its frames are identical to decord 0.6.0 on the sample videos.
+- The Kubric generator runs in Kubric's Docker image pinned by digest. `data_generation/requirements-kubric.txt`
+  (PyPI kubric 0.1.1, from 2021) is removed.
+
+### Upgrading
+- Reinstall from `requirements.txt`: `av` replaces `decord`, and nothing is downloaded from a GitHub release any
+  more.
+
 ## 1.1.1-offline-arm64 — 2026-11-13
 
 ### Security
@@ -32,7 +45,7 @@ Security sweep. Details and the reasons for each change: [docs/SECURITY.md](docs
 - Training checkpoints save the sampler resume state as `sampler_pos_start.json`; older
   `sampler_pos_start.pkl` files still resume (read safely).
 - `huggingface-cli` is gone from huggingface_hub 1.0 and later: the README uses `hf download`.
-- Kubric's dependencies moved to `data_generation/requirements-kubric.txt`.
+- Kubric's dependencies moved to `data_generation/requirements-kubric.txt` (replaced in 1.2.0).
 
 ### Removed
 - Unmaintained or unused packages: `func-timeout` (replaced by `videox_fun/utils/timeout.py`), `tomesd`,

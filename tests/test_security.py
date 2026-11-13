@@ -171,17 +171,13 @@ class StaticSecurityTests(unittest.TestCase):
         bad = []
         for f in files:
             for line in f.read_text().splitlines():
-                line = line.split("#", 1)[0].strip() if not line.lstrip().startswith("decord @") else line.strip()
+                line = line.split("#", 1)[0].strip()
                 if not line:
-                    continue
-                if line.startswith("decord @ "):
-                    if "#sha256=" not in line:
-                        bad.append(f"{f.name}: {line} (direct URL without #sha256=)")
                     continue
                 spec = line.split(";", 1)[0].strip()
                 if not re.fullmatch(r"[A-Za-z0-9_.\-\[\]]+==[A-Za-z0-9_.+\-]+", spec):
                     bad.append(f"{f.name}: {line}")
-        self.assertEqual(bad, [], "pin every requirement with == (hash-pin direct URLs)")
+        self.assertEqual(bad, [], "pin every requirement with ==")
 
     def test_no_unauthenticated_web_api(self):
         self.assertFalse((ROOT / "videox_fun" / "api").exists(),

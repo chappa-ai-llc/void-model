@@ -17,9 +17,14 @@ if a web UI or API is ever added.
 
 ## Dependencies
 
-- Every requirement in `requirements.txt`, `data_generation/requirements.txt` and
-  `data_generation/requirements-kubric.txt` is pinned with `==`. The ARM64 decord wheel is a direct URL
-  pinned by `#sha256=`, so pip refuses a changed file. `tests/test_security.py` fails on an unpinned line.
+- Every requirement in `requirements.txt` and `data_generation/requirements.txt` is pinned with `==`.
+  Every package comes from PyPI as a wheel, with no custom binary and no direct URL.
+  `tests/test_security.py` fails on an unpinned line.
+- Video decoding uses PyAV (`av`), which is maintained and has FFmpeg in its wheels. It replaced decord, which
+  had no release since 2021 and needed a custom ARM64 build. `videox_fun/utils/video_reader.py` keeps decord's
+  interface, and its frames match decord 0.6.0 exactly on the sample videos (`tests/test_smoke_models.py`).
+- The Kubric generator runs in Kubric's own Docker image, pinned by digest (`data_generation/README.md`).
+  It is no longer a PyPI install: the PyPI `kubric` package has had no release since 2021.
 - The BUILD office scans `main` against OSV.dev every night and lists findings on the project's board
   (Security timeline group). Fix critical findings within 2 days, high within 7, medium within 30.
 - Before you change a pin, check the new version on OSV.dev, choose a release at least two weeks old,
@@ -40,7 +45,7 @@ if a web UI or API is ever added.
 | safetensors | 0.6.2 | 0.8.0 | required by transformers 5.21 and diffusers 0.42 |
 | peft | 0.17.1 | 0.21.2 | matches transformers 5 |
 
-Removed: `tomesd` and `torchsde` (unused, unmaintained), `omegaconf` (only used by the removed UI),
+Removed: `decord` and the PyPI `kubric` (both unmaintained since 2021; see above), `tomesd` and `torchsde` (unused, unmaintained), `omegaconf` (only used by the removed UI),
 `func-timeout` (unmaintained since 2019; replaced by `videox_fun/utils/timeout.py`, standard library
 only), and the commented-out Gradio 3.x line (80+ advisories).
 
@@ -92,10 +97,16 @@ XSRF protection on, and turns off usage statistics. Reach it from elsewhere over
 `notebook.ipynb` used to clone the upstream `netflix/void-model`, which installs upstream's old pins.
 It now clones this repository.
 
+## SAM2
+
+SAM2 publishes no release tags, so the README installs it from Git at a pinned commit (`2b90b9f`, the
+head of `main` on 2026-11-13). At that commit SAM2 loads its checkpoint with
+`torch.load(..., weights_only=True)` (`sam2/build_sam.py`), so a checkpoint file cannot run code.
+
 ## Known items left open
 
-- SAM2 is installed from its Git repository (README, "Install SAM2") without a pinned commit. Pin it
-  when the project settles on a SAM2 version.
+- None in the code or dependencies as of 2026-11-13. Not yet done: a GPU inference run on the target
+  (DGX Spark, Python 3.12, aarch64) with the new pins. The checks above ran on CPU under Python 3.13, x86.
 
 ## Checking it yourself
 

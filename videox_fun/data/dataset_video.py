@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from decord import VideoReader
+from ..utils.video_reader import VideoReader
 from einops import rearrange
 from ..utils.timeout import FunctionTimedOut, func_timeout
 from PIL import Image

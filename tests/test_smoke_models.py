@@ -111,6 +111,31 @@ class SmokeTests(unittest.TestCase):
         self.assertEqual(latents.shape[1], 4)
         self.assertEqual(decoded.shape[1], 3)
 
+    def test_video_reader(self):
+        """The PyAV reader keeps decord's surface; where decord is installed, the frames must be identical."""
+        import numpy as np
+        from videox_fun.utils.video_reader import VideoReader
+        path = str(ROOT / "sample" / "lime" / "input_video.mp4")
+        vr = VideoReader(path, num_threads=2)
+        n = len(vr)
+        self.assertEqual(n, 46)
+        idx = [0, 3, 3, n // 2, n - 1, -1]
+        frames = vr.get_batch(idx).asnumpy()
+        self.assertEqual(frames.dtype, np.uint8)
+        self.assertEqual(frames.shape[0], len(idx))
+        self.assertEqual(frames.shape[-1], 3)
+        self.assertTrue(np.array_equal(frames[1], frames[2]))
+        self.assertTrue(np.array_equal(frames[4], frames[5]))
+        with self.assertRaises(IndexError):
+            vr.get_batch([n])
+        try:
+            import decord
+        except ImportError:
+            return
+        ref = decord.VideoReader(path, num_threads=2)
+        self.assertEqual(len(ref), n)
+        self.assertTrue(np.array_equal(ref.get_batch(idx).asnumpy(), frames))
+
     def test_text_encoder_and_schedulers(self):
         from diffusers import CogVideoXDDIMScheduler, DDIMScheduler
         from transformers import T5Config

@@ -217,20 +217,20 @@
     {
       "id": "S2",
       "label": "Replace decord (unmaintained since 2021) with a maintained video decoder in the training loaders",
-      "note": "dep-audit exception unmaintained:decord expires 2027-02-11; needs a GPU training check",
-      "start": "2026-11-14",
-      "end": "2027-02-11",
-      "status": "planned",
-      "pct": 0
+      "note": "PyAV reader, frames identical to decord on the samples (tests/test_smoke_models.py); exception dropped",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "status": "done",
+      "pct": 100
     },
     {
       "id": "S3",
       "label": "Run the Kubric generator from Kubric's Docker image pinned by digest instead of PyPI kubric 0.1.1",
-      "note": "dep-audit exception unmaintained:kubric expires 2027-02-11",
-      "start": "2026-11-14",
-      "end": "2027-02-11",
-      "status": "planned",
-      "pct": 0
+      "note": "kubricdockerhub/kubruntu@sha256:a4152c80\u2026 (data_generation/README.md); exception dropped",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "status": "done",
+      "pct": 100
     }
   ],
   "about": {

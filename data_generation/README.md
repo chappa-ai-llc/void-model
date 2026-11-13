@@ -194,13 +194,15 @@ python kubric_variable_objects.py --num_pairs 10 --fast
 
 ### Dependencies
 
-Kubric requires its own environment. See [Kubric installation](https://github.com/google-research/kubric#installation). Assets (KuBasic, GSO, HDRI Haven) are fetched automatically from Google Cloud Storage.
-
-The versions are pinned in `requirements-kubric.txt`:
+Kubric needs Blender as a Python module, so Kubric ships as a Docker image rather than a pip install (see [Kubric installation](https://github.com/google-research/kubric#installation)). Run the generator in that image, pinned by digest so you always get the same build. From this folder:
 
 ```bash
-pip install -r requirements-kubric.txt
+docker run --rm --user "$(id -u):$(id -g)" --volume "$(pwd):/kubric" --workdir /kubric \
+  kubricdockerhub/kubruntu@sha256:a4152c8066ffbd7bd303e4ea79c3ce250f190368cb07479fb6763308f165a17f \
+  python3 kubric_variable_objects.py --num_pairs 10 --fast
 ```
+
+The digest is `kubricdockerhub/kubruntu:latest` as resolved on 2026-11-13. To move to a newer image, resolve the tag again (`python /srv/tool-bin/dep-audit/dep_audit.py bases resolve kubricdockerhub/kubruntu:latest` in a chappa.ai pod, or `docker buildx imagetools inspect`) and update this line. The script encodes video with the `ffmpeg` on the image's PATH, falling back to `imageio-ffmpeg` when that package is installed. Assets (KuBasic, GSO, HDRI Haven) are fetched automatically from Google Cloud Storage.
 
 ---
 
