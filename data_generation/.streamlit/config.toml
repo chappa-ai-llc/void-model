@@ -1,0 +1,14 @@
+# Streamlit settings for physics_review_ui.py, read when you start it from
+# this folder (`streamlit run physics_review_ui.py`).
+# The review tool has no login, so it listens on this machine only.
+# To reach it from another host, use an SSH tunnel rather than widening this.
+
+[server]
+address = "127.0.0.1"
+headless = true
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+# Offline edition: no usage statistics sent to Streamlit.
+gatherUsageStats = false

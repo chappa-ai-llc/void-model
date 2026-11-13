@@ -17,7 +17,7 @@ import torch
 import torchvision.transforms as transforms
 from scipy.special import binom
 
-from func_timeout import func_timeout, FunctionTimedOut
+from ..utils.timeout import func_timeout, FunctionTimedOut
 from decord import VideoReader
 from PIL import Image
 from torch.utils.data import BatchSampler, Sampler

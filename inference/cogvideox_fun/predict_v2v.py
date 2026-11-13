@@ -58,7 +58,7 @@ def load_pipeline(config):
             from safetensors.torch import load_file, safe_open
             state_dict = load_file(config.video_model.transformer_path)
         else:
-            state_dict = torch.load(config.video_model.transformer_path, map_location="cpu")
+            state_dict = torch.load(config.video_model.transformer_path, map_location="cpu", weights_only=True)
         state_dict = state_dict["state_dict"] if "state_dict" in state_dict else state_dict
 
         param_name = 'patch_embed.proj.weight'
@@ -100,7 +100,7 @@ def load_pipeline(config):
             from safetensors.torch import load_file, safe_open
             state_dict = load_file(config.video_model.vae_path)
         else:
-            state_dict = torch.load(config.video_model.vae_path, map_location="cpu")
+            state_dict = torch.load(config.video_model.vae_path, map_location="cpu", weights_only=True)
         state_dict = state_dict["state_dict"] if "state_dict" in state_dict else state_dict
 
         m, u = vae.load_state_dict(state_dict, strict=False)

@@ -4,10 +4,11 @@ This module provides simplified data loading without PyTorch dependencies.
 """
 
 import os
-import pickle
 import numpy as np
 import json
 from pathlib import Path
+
+from safe_pickle import safe_load  # HUMOTO .pkl files are downloaded data: never plain pickle.load
 
 
 # Coordinate system conversion matrix (Z-up to Y-up)
@@ -108,7 +109,7 @@ def load_humoto_pickle(sequence_path, y_up=True):
         raise FileNotFoundError(f"Pickle file not found: {pkl_file}")
 
     with open(pkl_file, 'rb') as f:
-        data = pickle.load(f)
+        data = safe_load(f)
 
     # Extract basic info
     armature_data = data.get('armature', [])
