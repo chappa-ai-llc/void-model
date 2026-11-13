@@ -3,6 +3,17 @@
 All notable changes to the Chappa AI offline edition of VOID. Versions are tagged on `main` as
 `v<semver>-offline-arm64`.
 
+## 1.2.1-offline-arm64 — 2026-11-13
+
+### Added
+- `requirements-lock-linux-aarch64-cp312.txt`: the hash-locked install set for the DGX Spark target.
+- `tools/target_check.sh`: install that lock in a fresh venv, run the tests and a CUDA smoke test.
+
+### Security
+- The Streamlit review tool accepts WebSocket connections only for the Host names `localhost` and
+  `127.0.0.1` (`server.allowedHosts`), which blocks DNS rebinding. Assessed against the Security Self-Check
+  standard (`security-self-check` conformance/void-model.toml).
+
 ## 1.2.0-offline-arm64 — 2026-11-13
 
 ### Changed

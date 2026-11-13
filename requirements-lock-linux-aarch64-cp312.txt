@@ -1,0 +1,601 @@
+# Hash-locked install set for the target: CPython 3.12, Linux aarch64 (DGX Spark, Ubuntu 24.04).
+# Generated 2026-11-13 from requirements.txt with
+#   pip install --dry-run --report ... --python-version 3.12 --platform manylinux_2_17..2_39_aarch64 --only-binary=:all:
+# Every package was checked against OSV.dev (0 advisories). deepspeed is left out: it ships only as source,
+# and the inference path does not import it. The `# via` notes (pip-compile style) say what pulled each
+# package in. Install with tools/target_check.sh or:
+#   pip install --require-hashes --no-deps --only-binary=:all: -r requirements-lock-linux-aarch64-cp312.txt
+
+absl-py==2.3.1 \
+    --hash=sha256:eeecf07f0c2a93ace0772c92e596ace6d3d3996c042b2128459aaae2a76de11d
+    # via
+    #   -r requirements.txt
+    #   ml_collections
+    #   tensorboard
+accelerate==1.15.0 \
+    --hash=sha256:97eacca0b73e45cb867dbf8c5d5d4dc32219544300e0c8992c7334dc2ef33cec
+    # via
+    #   -r requirements.txt
+    #   peft
+aiohappyeyeballs==2.7.1 \
+    --hash=sha256:9243213661e29250eb41368e5daa826fc017156c3b8a11440826b2e3ed376472
+    # via aiohttp
+aiohttp==3.14.5 \
+    --hash=sha256:abfda5cb094a829f7bc25216a32f7db2e85cc65bd59910f8e7b40b3d9b224764
+    # via
+    #   datasets
+    #   fsspec
+aiosignal==1.4.0 \
+    --hash=sha256:053243f8b92b990551949e63930a839ff0cf0b0ebbe0597b0f3fb19e1a0fe82e
+    # via aiohttp
+albucore==0.0.24 \
+    --hash=sha256:adef6e434e50e22c2ee127b7a3e71f2e35fa088bcf54431e18970b62d97d0005
+    # via albumentations
+albumentations==2.0.8 \
+    --hash=sha256:c4c4259aaf04a7386ad85c7fdcb73c6c7146ca3057446b745cc035805acb1017
+    # via -r requirements.txt
+annotated-doc==0.0.6 \
+    --hash=sha256:361ca0950cc7082f53fa69e9328409f40a62c61e57e0a47e1825a08078a58a53
+    # via typer
+annotated-types==0.8.0 \
+    --hash=sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0
+    # via pydantic
+anyio==4.16.0 \
+    --hash=sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026
+    # via httpx2
+asttokens==3.0.2 \
+    --hash=sha256:9da13157f5b28becde0bd374fc677dcd3c290614264eff096f167c469cd9f933
+    # via stack-data
+attrs==26.1.0 \
+    --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
+    # via aiohttp
+av==19.0.1 \
+    --hash=sha256:437d4c0d5a7d771f2c3af84cd28e6aac6e173851116c60b53e81dbf1eebe4eab
+    # via -r requirements.txt
+beautifulsoup4==4.13.5 \
+    --hash=sha256:642085eaa22233aceadff9c69651bc51e8bf3f874fb6d7104ece2beb24b47c4a
+    # via -r requirements.txt
+came-pytorch==0.1.3 \
+    --hash=sha256:576b30dd168cb688102806a4a1c8eb215fc2958b76c2e8a349a9e9c0a1c42f0a
+    # via -r requirements.txt
+certifi==2026.10.23 \
+    --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
+    # via requests
+charset-normalizer==3.5.2 \
+    --hash=sha256:b91363207bd9dc966a691e959bb47f64b30f7ac4b072be9968b366982f7db77c
+    # via requests
+click==8.5.1 \
+    --hash=sha256:8bb5376d2006950386f8c6427613334a2acadc5f559cb80e638d00b4df957e37
+    # via huggingface_hub
+cloudpickle==3.1.2 \
+    --hash=sha256:9acb47f6afd73f60dc1df93bb801b472f05ff42fa6c84167d25cb206be1fbf4a
+    # via joblib
+contourpy==1.3.3 \
+    --hash=sha256:92d9abc807cf7d0e047b95ca5d957cf4792fcd04e920ca70d48add15c1a90ea7
+    # via matplotlib
+cuda-bindings==13.5.0 \
+    --hash=sha256:40eadfad6ae1554f8c1aa456620a85a49a275fc902f2c6dd93ee8c488b2c5e9f
+    # via torch
+cuda-pathfinder==1.8.6 \
+    --hash=sha256:bf6b3b06323cf95a11d671818392da5da23ddbbb4dfc4b77ca10622783c25980
+    # via cuda-bindings
+cuda-toolkit==13.0.3.0 \
+    --hash=sha256:d693caaa261214ddd7dbb60d68e71cbed884e68c2be7509778f3051da0b91c3f
+    # via torch
+cycler==0.12.1 \
+    --hash=sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30
+    # via matplotlib
+datasets==5.1.0 \
+    --hash=sha256:86fd08b280485aab82894d2c81842c4151d93b575efea0054315104cb7bc3cec
+    # via -r requirements.txt
+diffusers==0.42.1 \
+    --hash=sha256:9154faa704ce00e0b77f568e0d64786064368528aab5fc14eeea92f87d788014
+    # via -r requirements.txt
+dill==0.4.1 \
+    --hash=sha256:1e1ce33e978ae97fcfcff5638477032b801c46c7c65cf717f95fbc2248f79a9d
+    # via
+    #   datasets
+    #   multiprocess
+einops==0.8.0 \
+    --hash=sha256:9572fb63046264a862693b0a87088af3bdc8c068fde03de63453cbbde245465f
+    # via -r requirements.txt
+executing==2.3.0 \
+    --hash=sha256:736e859c9f8701f11fcf516856f26f562e04776387824b43a35a1dfe21c84122
+    # via stack-data
+filelock==4.2.10 \
+    --hash=sha256:9479aaeb4db20b5a53e3da28493edd24720b66b8a0b84030aa56ccdf243d6857
+    # via
+    #   datasets
+    #   diffusers
+    #   huggingface_hub
+    #   torch
+fonttools==4.68.0 \
+    --hash=sha256:b41e71b2657c9843b2327b4e3c116db1757dc8cd05d978cd47cb5061272d4997
+    # via matplotlib
+frozenlist==1.8.0 \
+    --hash=sha256:96f423a119f4777a4a056b66ce11527366a8bb92f54e541ade21f2374433f6d4
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec==2026.7.0 \
+    --hash=sha256:b57ddbafedfaef7018c1ecab32aa200a9d7ca26b77965f64e48b70061249d279
+    # via
+    #   datasets
+    #   huggingface_hub
+    #   torch
+ftfy==6.1.1 \
+    --hash=sha256:0ffd33fce16b54cccaec78d6ec73d95ad370e5df5a25255c8966a6147bd667ca
+    # via -r requirements.txt
+grpcio==1.85.1 \
+    --hash=sha256:843aa281a48188621f50880496d35defed51298bcb66d5345d5f282fd3f87354
+    # via tensorboard
+h11==0.16.0 \
+    --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86
+    # via httpcore2
+hf-xet==1.8.0 \
+    --hash=sha256:8800e3444770f2c630b361bc6d5c6ebb770b7830646cf632fbb79d0e5bbc9e7f
+    # via huggingface_hub
+httpcore2==2.16.0 \
+    --hash=sha256:5c4358319f2602d984ad93182c9fee5160f22e9da7babdda870a5e7c4e2dc34f
+    # via httpx2
+httpx2==2.16.0 \
+    --hash=sha256:fd2c5d7909e8d86fe92d53020c310ca0e4e431b838c207c5754b9bbf0308d49a
+    # via huggingface_hub
+huggingface-hub==2.4.0 \
+    --hash=sha256:42ecfd93ede47bdd333daebbf66a32d7bfe2e18752754fe4d2d4f98a0179d801
+    # via
+    #   accelerate
+    #   datasets
+    #   diffusers
+    #   peft
+    #   timm
+    #   tokenizers
+    #   transformers
+idna==3.20 \
+    --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
+    # via
+    #   anyio
+    #   httpx2
+    #   requests
+    #   yarl
+imageio==2.37.0 \
+    --hash=sha256:11efa15b87bc7871b61590326b2d635439acc321cf7f8ce996f812543ce10eed
+    # via
+    #   -r requirements.txt
+    #   scikit-image
+imageio-ffmpeg==0.6.0 \
+    --hash=sha256:1d47bebd83d2c5fc770720d211855f208af8a596c82d17730aa51e815cdee6dc
+    # via -r requirements.txt
+importlib-metadata==10.2.0 \
+    --hash=sha256:c7a4bf1c7479601f6b8e437cfc14f4f77028ba62a8f34ae95cd93d9774dfba51
+    # via
+    #   diffusers
+    #   triton
+ipython==9.18.1 \
+    --hash=sha256:997ce9140d374531a61069c70c0f9ef299d6dd3559ea0f94b8af589726e3c1d5
+    # via mediapy
+ipython-pygments-lexers==1.1.1 \
+    --hash=sha256:a9462224a505ade19a605f71f8fa63c2048833ce50abc86768a0d81d876dc81c
+    # via ipython
+jedi==0.20.1 \
+    --hash=sha256:0fb16d86c4a4c73c37ba518c77419975e30fcc620658a8d14fbb5720cdd34142
+    # via ipython
+jinja2==3.1.6 \
+    --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
+    # via torch
+joblib==1.6.0 \
+    --hash=sha256:3dbbf9f6e4b592a2357b854608e980fe6390d131d7a82f011a377ef2ebef7aba
+    # via scikit-learn
+kiwisolver==1.5.1 \
+    --hash=sha256:d27c2123977cb9269c30a49ba45f03a4323017ef693e19db4ec9dbe1299a3002
+    # via matplotlib
+kornia==0.8.1 \
+    --hash=sha256:5dcb00faa795dfb45a3630d771387290bc4f40473451352ca250e5bcc81af3d1
+    # via -r requirements.txt
+kornia-rs==0.2.0 \
+    --hash=sha256:a180fff70120c4558355e52eec7ea40e00a556f0d6bb760e0f511c937847cdf9
+    # via kornia
+lazy-importer==0.1.0 \
+    --hash=sha256:bd93fab7bef18e842eea02b839410954d37889140dc64ca4d9680aec6880c739
+    # via importlib_metadata
+lazy-loader==0.6 \
+    --hash=sha256:77253be3391b06124a0e16105bd663b6c54470af1a9ca8e1cf026f38d58ed056
+    # via scikit-image
+loguru==0.7.3 \
+    --hash=sha256:31a33c10c8e1e10422bfd431aeb5d351c7cf7fa671e3c4df004162264b28220c
+    # via -r requirements.txt
+markdown==3.11.3 \
+    --hash=sha256:e1a31a112232504d753e5c01bb8c2de90d3f0ba986b063e10770cf7695b09e73
+    # via tensorboard
+markdown-it-py==4.3.0 \
+    --hash=sha256:7aa1511a46c39138de78d9eba92ce47e63124d8003fc98b3a351909e04239efa
+    # via rich
+markupsafe==3.0.4 \
+    --hash=sha256:6a45c3d514f2436064db00d7fc8778d888f0236ebfed649b53d13a59e69ad51b
+    # via
+    #   jinja2
+    #   werkzeug
+matplotlib==3.10.6 \
+    --hash=sha256:662df55604a2f9a45435566d6e2660e41efe83cd94f4288dfbf1e6d1eae4b0bb
+    # via
+    #   -r requirements.txt
+    #   mediapy
+matplotlib-inline==0.2.2 \
+    --hash=sha256:3c821cf1c209f59fb2d2d64abbf5b23b67bcb2210d663f9918dd851c6da1fcf6
+    # via ipython
+mdurl==0.1.2 \
+    --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8
+    # via markdown-it-py
+mediapy==1.2.4 \
+    --hash=sha256:dd2b2364543077a1d292cab9eca5d08c8550521523aa1cbb721fd7617ccde872
+    # via -r requirements.txt
+ml-collections==1.1.0 \
+    --hash=sha256:23b6fa4772aac1ae745a96044b925a5746145a70734f087eaca6626e92c05cbc
+    # via -r requirements.txt
+mpmath==1.3.0 \
+    --hash=sha256:a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c
+    # via sympy
+multidict==7.2.1 \
+    --hash=sha256:fa0ecd064b0ae18d235283abb5adbc4e07304dba8f2aa7c0d61f28bebcc70d4c
+    # via
+    #   aiohttp
+    #   yarl
+multiprocess==0.70.19 \
+    --hash=sha256:3a56c0e85dd5025161bac5ce138dcac1e49174c7d8e74596537e729fd5c53c28
+    # via datasets
+networkx==3.7 \
+    --hash=sha256:e3fd2c13a7814cee3746340d8d7f8598a67f16a58bf47fb7f8793fab6efca1b0
+    # via
+    #   scikit-image
+    #   torch
+numpy==1.26.4 \
+    --hash=sha256:9fad7dcb1aac3c7f0584a5a8133e3a43eeb2fe127f47e3632d43d677c66c102b
+    # via
+    #   -r requirements.txt
+    #   accelerate
+    #   albucore
+    #   albumentations
+    #   contourpy
+    #   datasets
+    #   diffusers
+    #   imageio
+    #   matplotlib
+    #   mediapy
+    #   opencv-python
+    #   opencv-python-headless
+    #   pandas
+    #   peft
+    #   scikit-image
+    #   scikit-learn
+    #   scipy
+    #   tensorboard
+    #   tifffile
+    #   torchvision
+    #   transformers
+nvidia-cublas==13.1.1.3 \
+    --hash=sha256:b7a210458267ac818974c53038fbec2e969d5c99f305ab15c72522fa9f001dd5
+    # via
+    #   nvidia-cudnn-cu13
+    #   nvidia-cusolver
+nvidia-cuda-cupti==13.0.85 \
+    --hash=sha256:796bd679890ee55fb14a94629b698b6db54bcfd833d391d5e94017dd9d7d3151
+    # via cuda-toolkit
+nvidia-cuda-nvrtc==13.0.88 \
+    --hash=sha256:d27f20a0ca67a4bb34268a5e951033496c5b74870b868bacd046b1b8e0c3267b
+    # via nvidia-cublas
+nvidia-cuda-runtime==13.0.96 \
+    --hash=sha256:ef9bcbe90493a2b9d810e43d249adb3d02e98dd30200d86607d8d02687c43f55
+    # via cuda-toolkit
+nvidia-cudnn-cu13==9.24.0.43 \
+    --hash=sha256:a6812a554a1ff0413e9c52b84c26c050380649ab9615f9c16bded368ce9f421f
+    # via torch
+nvidia-cufft==12.0.0.61 \
+    --hash=sha256:2708c852ef8cd89d1d2068bdbece0aa188813a0c934db3779b9b1faa8442e5f5
+    # via cuda-toolkit
+nvidia-cufile==1.15.1.6 \
+    --hash=sha256:bdc0deedc61f548bddf7733bdc216456c2fdb101d020e1ab4b88d232d5e2f6d1
+    # via cuda-toolkit
+nvidia-curand==10.4.0.35 \
+    --hash=sha256:133df5a7509c3e292aaa2b477afd0194f06ce4ea24d714d616ff36439cee349a
+    # via cuda-toolkit
+nvidia-cusolver==12.0.4.66 \
+    --hash=sha256:02c2457eaa9e39de20f880f4bd8820e6a1cfb9f9a34f820eb12a155aa5bc92d2
+    # via cuda-toolkit
+nvidia-cusparse==12.6.3.3 \
+    --hash=sha256:80bcc4662f23f1054ee334a15c72b8940402975e0eab63178fc7e670aa59472c
+    # via nvidia-cusolver
+nvidia-cusparselt-cu13==0.8.1 \
+    --hash=sha256:4dca476c50bf4780d46cd0bfbd82e2bc10a08e4fef7950917ce8d7578d22a23f
+    # via torch
+nvidia-nccl-cu13==2.30.7 \
+    --hash=sha256:ca786ffa5a647c75d4d1f5cc72a6c4f537947e2ba8823d7c8aaf768e7a7b9f77
+    # via torch
+nvidia-nvjitlink==13.5.37 \
+    --hash=sha256:893f6f9a55b2720ed94913b5ba3332e972da8c78dfa2863d0244403dbd528ffc
+    # via
+    #   nvidia-cufft
+    #   nvidia-cusolver
+    #   nvidia-cusparse
+nvidia-nvshmem-cu13==3.4.5 \
+    --hash=sha256:6dc2a197f38e5d0376ad52cd1a2a3617d3cdc150fd5966f4aee9bcebb1d68fe9
+    # via torch
+nvidia-nvtx==13.0.85 \
+    --hash=sha256:cb7780edb6b14107373c835bf8b72e7a178bac7367e23da7acb108f973f157a6
+    # via cuda-toolkit
+opencv-python==4.10.0.84 \
+    --hash=sha256:09a332b50488e2dda866a6c5573ee192fe3583239fb26ff2f7f9ceb0bc119ea6
+    # via -r requirements.txt
+opencv-python-headless==4.11.0.86 \
+    --hash=sha256:6efabcaa9df731f29e5ea9051776715b1bdd1845d7c9530065c7951d2a2899eb
+    # via
+    #   albucore
+    #   albumentations
+packaging==25.0 \
+    --hash=sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484
+    # via
+    #   -r requirements.txt
+    #   accelerate
+    #   datasets
+    #   huggingface_hub
+    #   kornia
+    #   lazy-loader
+    #   matplotlib
+    #   peft
+    #   scikit-image
+    #   tensorboard
+    #   transformers
+pandas==3.0.6 \
+    --hash=sha256:e3dccb584123b399c07562ac4d62543e90ede49ddf8ce3c13ffc64cbe828c281
+    # via datasets
+parso==0.8.7 \
+    --hash=sha256:a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c
+    # via jedi
+peft==0.21.2 \
+    --hash=sha256:106ab6077ff72c54d21577f9af5970e34bac7582cb14209f7b2b511e322a4eae
+    # via -r requirements.txt
+pexpect==4.9.0 \
+    --hash=sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523
+    # via ipython
+pillow==13.0.0 \
+    --hash=sha256:8bf295fe459343bc6093c8e5e0df60bfa189e0fcb775a22e2c2488fdeccc6c0d
+    # via
+    #   -r requirements.txt
+    #   diffusers
+    #   imageio
+    #   matplotlib
+    #   mediapy
+    #   scikit-image
+    #   tensorboard
+    #   torchvision
+prompt-toolkit==3.0.53 \
+    --hash=sha256:01c0891d7f9237d5e339f7d3e42cdae80b7534abb1c7c0e3352efba6231492f2
+    # via ipython
+propcache==0.5.4 \
+    --hash=sha256:60a64cbccaa11b7760ce705a14ada17ba459e7ca9f23ba587eb013821032d7ef
+    # via
+    #   aiohttp
+    #   yarl
+protobuf==7.36.2 \
+    --hash=sha256:e11e1f0180583a2af89db6a2ecd9e8dc40aa6d2988ca175bfd0e6d12ea72d74e
+    # via tensorboard
+psutil==7.2.2 \
+    --hash=sha256:b0726cecd84f9474419d67252add4ac0cd9811b04d61123054b9fb6f57df6e9e
+    # via
+    #   accelerate
+    #   ipython
+    #   peft
+ptyprocess==0.7.0 \
+    --hash=sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35
+    # via pexpect
+pure-eval==0.2.4 \
+    --hash=sha256:96cae060a313cfaad51bb761278bfb0e62dc0248d9315a81173752dc546cd37a
+    # via stack-data
+pyarrow==26.0.1 \
+    --hash=sha256:6c18167774fb599d42444b7ac558a893d49e750fb14232b538955e6f0d1d51ea
+    # via datasets
+pydantic==2.14.3 \
+    --hash=sha256:3f7b347782ab7e4cf4c798496ae3a82787d9f21ec12676a9c564355eeef8daa8
+    # via
+    #   albumentations
+    #   typer
+pydantic-core==2.50.4 \
+    --hash=sha256:16902a147b3da4840612164a5e67947104d63e978f7a57c395877a5e26690b9c
+    # via pydantic
+pygments==2.21.0 \
+    --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9
+    # via
+    #   ipython
+    #   ipython_pygments_lexers
+    #   rich
+pyparsing==3.3.3 \
+    --hash=sha256:ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4
+    # via matplotlib
+python-dateutil==4.0.0 \
+    --hash=sha256:a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c
+    # via
+    #   matplotlib
+    #   pandas
+pyyaml==6.0.3 \
+    --hash=sha256:9149cad251584d5fb4981be1ecde53a1ca46c891a79788c0df828d2f166bda28
+    # via
+    #   accelerate
+    #   albumentations
+    #   datasets
+    #   huggingface_hub
+    #   ml_collections
+    #   peft
+    #   timm
+    #   transformers
+regex==2026.11.9 \
+    --hash=sha256:1e2513028297550486dffc6e0799f24f194957418b75cd0ac2c7ad484e0d12a2
+    # via
+    #   diffusers
+    #   transformers
+requests==2.34.2 \
+    --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0
+    # via
+    #   -r requirements.txt
+    #   diffusers
+rich==15.0.0 \
+    --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb
+    # via typer
+safetensors==0.8.0 \
+    --hash=sha256:7a46e5ff292c356d6991e60942ba7f79817682d3a2cef0702136448cb9c4d235
+    # via
+    #   -r requirements.txt
+    #   accelerate
+    #   diffusers
+    #   peft
+    #   timm
+    #   transformers
+scikit-image==0.25.2 \
+    --hash=sha256:9d1e80107bcf2bf1291acfc0bf0425dceb8890abe9f38d8e94e23497cbf7ee0d
+    # via -r requirements.txt
+scikit-learn==1.7.2 \
+    --hash=sha256:b4d6e9deed1a47aca9fe2f267ab8e8fe82ee20b4526b2c0cd9e135cea10feb44
+    # via -r requirements.txt
+scipy==1.14.0 \
+    --hash=sha256:d91db2c41dd6c20646af280355d41dfa1ec7eead235642178bd57635a3f82209
+    # via
+    #   -r requirements.txt
+    #   albumentations
+    #   scikit-image
+    #   scikit-learn
+    #   torchdiffeq
+sentencepiece==0.2.1 \
+    --hash=sha256:99f955df238021bf11f0fc37cdb54fd5e5b5f7fd30ecc3d93fb48b6815437167
+    # via -r requirements.txt
+setuptools==84.2.1 \
+    --hash=sha256:ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2
+    # via
+    #   tensorboard
+    #   torch
+shellingham==1.5.4 \
+    --hash=sha256:7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686
+    # via typer
+simsimd==6.5.16 \
+    --hash=sha256:13b8af340ad5cc1311cae6f8d778aef80bff1922260dee1a17ca60878eaac466
+    # via albucore
+soupsieve==4.1 \
+    --hash=sha256:e4d667b3974ce6e038e7390486b8093369854a1d345ffdd4c121dfc4a782e809
+    # via beautifulsoup4
+stack-data==0.6.3 \
+    --hash=sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695
+    # via ipython
+stringzilla==5.3.2 \
+    --hash=sha256:045f82562e6f168380a5be0be36a95c5143b84a2bfd6ced3761c0711d44c68f6
+    # via albucore
+sympy==1.14.0 \
+    --hash=sha256:e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5
+    # via torch
+tensorboard==2.20.0 \
+    --hash=sha256:9dc9f978cb84c0723acf9a345d96c184f0293d18f166bb8d59ee098e6cfaaba6
+    # via -r requirements.txt
+tensorboard-data-server==0.7.2 \
+    --hash=sha256:7e0610d205889588983836ec05dc098e80f97b7e7bbff7e994ebb78f578d0ddb
+    # via tensorboard
+threadpoolctl==3.8.0 \
+    --hash=sha256:f1b49c82704d50f13ffae019c727b0fa4f6791a58f48f06a09c45face1be66da
+    # via scikit-learn
+tifffile==2026.3.3 \
+    --hash=sha256:e8be15c94273113d31ecb7aa3a39822189dd11c4967e3cc88c178f1ad2fd1170
+    # via scikit-image
+timm==1.0.19 \
+    --hash=sha256:c07b56c32f3d3226c656f75c1b5479c08eb34eefed927c82fd8751a852f47931
+    # via -r requirements.txt
+tokenizers==0.23.3 \
+    --hash=sha256:ec82e80e65a862275b97c3d90b7a523df8d9519ee48aeb4e9625b2cc909274e0
+    # via transformers
+torch==2.14.1 \
+    --hash=sha256:0b13acde294b401509830d85a8906cbf2fc97425a12a66cce1d9fa13c5106a2a
+    # via
+    #   -r requirements.txt
+    #   accelerate
+    #   came-pytorch
+    #   kornia
+    #   peft
+    #   timm
+    #   torchdiffeq
+    #   torchvision
+torchdiffeq==0.2.5 \
+    --hash=sha256:aa1db4bed13bd04952f28a53cdf4336d1ab60417c1d9698d7a239fec1cf2bcf8
+    # via -r requirements.txt
+torchvision==0.29.1 \
+    --hash=sha256:6e111c6ead37ba63347548c5bd84e1b6a60b187854a19bc2c87c9a48396888d9
+    # via
+    #   -r requirements.txt
+    #   timm
+tqdm==4.67.1 \
+    --hash=sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2
+    # via
+    #   -r requirements.txt
+    #   datasets
+    #   huggingface_hub
+    #   peft
+    #   transformers
+traitlets==5.16.1 \
+    --hash=sha256:f775618166caa0396c8e337099240f2bd3e5e917d203b2e6fbe21a58d3cb1f6b
+    # via
+    #   ipython
+    #   matplotlib-inline
+transformers==5.21.1 \
+    --hash=sha256:53b5fd825d009cb7700285acbb4e36e745c7f7df859202ba1a4f21a10eda8e3a
+    # via
+    #   -r requirements.txt
+    #   peft
+triton==3.8.0 \
+    --hash=sha256:a9c404c69ed4a39e8ec632eaf6b9fe058a060bf98979c177f6ef666f06bb8d50
+    # via torch
+truststore==0.10.5 \
+    --hash=sha256:9aaaedaefaf06d8b206278cf8b5012bc897f485a874503501e12d776df78951c
+    # via
+    #   httpcore2
+    #   httpx2
+typer==0.29.1 \
+    --hash=sha256:00dbc549c13428bec1be55fe1f4d0fb8c6637a310e4f178ef14abe9534ee7b58
+    # via transformers
+typing-extensions==4.16.0 \
+    --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
+    # via
+    #   aiohttp
+    #   aiosignal
+    #   albucore
+    #   albumentations
+    #   anyio
+    #   beautifulsoup4
+    #   grpcio
+    #   httpx2
+    #   huggingface_hub
+    #   ipython
+    #   pydantic
+    #   pydantic_core
+    #   torch
+    #   typing-inspection
+typing-inspection==0.4.5 \
+    --hash=sha256:bc210535442b39e1bf2805e0c7a17dfd6a4ace760c84c7f7d16245d23a6b1c39
+    # via pydantic
+tzdata==2026.6 \
+    --hash=sha256:0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec
+    # via
+    #   pandas
+    #   python-dateutil
+urllib3==2.8.0 \
+    --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3
+    # via requests
+wcwidth==0.9.4 \
+    --hash=sha256:093469e01d881bff3db93ff3f56c364dc87c441ea01f9f41c22de0c0bdf5c6ef
+    # via
+    #   ftfy
+    #   prompt_toolkit
+werkzeug==3.1.9 \
+    --hash=sha256:6392e50c78460ba618e5b21f08a71f59c99ce99cdc6cf6e3dd7e6ccca8754fab
+    # via tensorboard
+xxhash==4.1.0 \
+    --hash=sha256:09b78ce392272a9d121feb2fe6cb48d9538aa882bf8210485da4623e408b5b86
+    # via datasets
+yarl==1.25.1 \
+    --hash=sha256:4d781294bb815ecb5ea57ff6bbf8038e0a31a95fdf3e1788f66e0dc100d64b58
+    # via aiohttp
+zipp==4.1.2 \
+    --hash=sha256:b30cb6cd253122169c47de245ca24a86bac2a5d3802ba15bf7ba6414eb9e144d
+    # via importlib_metadata

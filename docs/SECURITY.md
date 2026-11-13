@@ -121,8 +121,8 @@ head of `main` on 2026-11-13). At that commit SAM2 loads its checkpoint with
 
 ## Known items left open
 
-- None in the code or dependencies as of 2026-11-13. Not yet done: a GPU inference run on the target
-  (DGX Spark, Python 3.12, aarch64) with the new pins. The checks above ran on CPU under Python 3.13, x86.
+- None in the code or dependencies as of 2026-11-13. The run on the target waits for the owner's approval of
+  the task `void-model-target-check` (board A-02); the checks above ran on CPU under Python 3.13, x86.
 
 ## Checking it yourself
 
@@ -135,10 +135,25 @@ On 2026-11-13 Bandit 1.9.4 found no high or medium issues. The low ones are expe
 augmentation, `subprocess` with argument lists (ffmpeg, Blender), `assert`, and `import pickle` in the safe
 loaders.
 
+### On the target (DGX Spark)
+
+`requirements-lock-linux-aarch64-cp312.txt` is the exact install set for CPython 3.12 on Linux aarch64: 143 wheels,
+each pinned by version and SHA-256, every one checked on OSV.dev (deepspeed is left out because it ships only as
+source). `tools/target_check.sh` installs it into a fresh venv with `--require-hashes --no-deps`, runs `pip check`,
+the test suite and a CUDA smoke test (tiny transformer with rotary embeddings and VAE in bf16 on the GPU), and
+prints PASS or FAIL. The BUILD office task `void-model-target-check` runs it on sparky-1 once the owner approves
+it on the Tasks page.
+
+```bash
+bash tools/target_check.sh
+```
+
 ### GitHub alerts
 
-- **Dependabot:** on. The office's dependency report reads the alerts each run. On 2026-11-13 15:38Z (main@aa5bc1e)
-  it read them with no error and found none open; 72 were open when the project was adopted.
+- **Dependabot:** on. The office's dependency report reads the open alerts each run
+  (`GET /repos/chappa-ai-llc/void-model/dependabot/alerts?state=open`, tool-bin `dep-audit/dep_audit.py`
+  `dependabot_alerts`; a failed read is recorded as `enabled: false` with the error). On 2026-11-13 15:38Z
+  (main@aa5bc1e) the read succeeded and returned no open alert; 72 were open when the project was adopted.
 - **Code scanning:** CodeQL would need GitHub Actions, which chappa.ai does not use. Bandit (above) and the
   tests stand in for it.
 - **Secret scanning:** gitleaks over the full history (47 commits on 2026-11-13) found nothing; the secret
