@@ -8,6 +8,9 @@ address = "127.0.0.1"
 headless = true
 enableCORS = true
 enableXsrfProtection = true
+# Only these Host names may open the app's WebSocket, which carries all its data. This blocks DNS
+# rebinding: a web page cannot reach the tool through a hostile name that resolves to 127.0.0.1.
+allowedHosts = ["localhost", "127.0.0.1"]
 
 [browser]
 # Offline edition: no usage statistics sent to Streamlit.

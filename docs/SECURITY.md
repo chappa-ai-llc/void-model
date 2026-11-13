@@ -90,7 +90,23 @@ Self-Check page.
 ## The Streamlit review tool
 
 `data_generation/.streamlit/config.toml` binds `physics_review_ui.py` to `127.0.0.1`, keeps CORS and
-XSRF protection on, and turns off usage statistics. Reach it from elsewhere over an SSH tunnel.
+XSRF protection on, allows only the Host names `localhost` and `127.0.0.1` on its WebSocket
+(`server.allowedHosts`), and turns off usage statistics. Reach it from elsewhere over an SSH tunnel.
+
+It was assessed against the Security Self-Check standard on 2026-11-13: `conformance/void-model.toml` in
+`chappa-ai-llc/security-self-check`. Probed live (Streamlit 1.66.1):
+
+| Probe | Result |
+|---|---|
+| Connect on the machine's own network address | refused (loopback only) |
+| WebSocket with `Host: rebind.evil.example` (DNS rebinding) | 403 |
+| WebSocket with `Origin: https://evil.example` (cross-site) | 403 |
+| WebSocket from `127.0.0.1` or `localhost` | 101 (works) |
+| `/.env`, `/.git/HEAD`, `/physics_review_ui.py` | the app shell, never a file |
+| Version in any answer | none |
+
+Streamlit cannot send security headers (CSP, frame protection, `nosniff`), and the tool has no sign-in.
+Both are accepted for a single-user tool on loopback. Board decision D-01 covers whether to do more.
 
 ## Notebook
 

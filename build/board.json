@@ -38,11 +38,38 @@
       "checked": "2026-11-13",
       "urgency": "whenever",
       "blocking": "no",
-      "title": "The Security Self-Check standard does not apply to void-model",
-      "plain": "void-model ships no web front end, so it does not adopt the self-check page and badge.",
-      "chosen": "No conformance file in `security-self-check`. STANDARD.md \u00a71.1 says a product without a web front end does not adopt; CONTRIBUTING.md says it gets no port issue. The one page in the repo, the Streamlit physics review tool in `data_generation/`, is a local data-curation helper. It is bound to 127.0.0.1 with XSRF protection on and is not part of the product. The deleted API and Gradio UI (X-01) were the only network surface.",
-      "why": "`ssc.py gaps void-model` reports no conformance file. That is the standard's own answer for a project without a front end, not a gap.",
-      "if_ignored": "Nothing to do. Overturn if you want the review tool assessed like arxiv-daily's loopback dashboard. The agent would then write `conformance/void-model.toml`."
+      "title": "The Streamlit review tool was assessed against the Security Self-Check standard",
+      "plain": "void-model has no hosted web front end. Its one web page, a local review tool, was assessed in full.",
+      "chosen": "`conformance/void-model.toml` in `security-self-check` covers the Streamlit physics review tool in `data_generation/`, from the code and a live run on 2026-11-13: 12 yes, 9 no, 84 n/a. It listens on 127.0.0.1 only. Other web sites cannot rebind it or open its WebSocket (403 on both, `server.allowedHosts` and the Origin check). It leaks no version and no file. The 9 no rows are the security headers Streamlit cannot send (CSP, frame protection, nosniff and four more) and the lack of a sign-in; D-01 asks what to do about them.",
+      "why": "The standard covers every web front end (STANDARD.md \u00a71.1). Assessing the one page is more honest than calling the repo out of scope.",
+      "if_ignored": "Nothing to do: confirm, or overturn with a note."
+    },
+    {
+      "id": "D-01",
+      "kind": "decision",
+      "filed": "2026-11-13",
+      "checked": "2026-11-13",
+      "urgency": "whenever",
+      "blocking": "no",
+      "title": "Streamlit review tool: accept the missing headers and sign-in, or do more?",
+      "plain": "The local review tool cannot send security headers and has no sign-in. Other web sites are already blocked from it.",
+      "why": "Self-check rows hdr-csp, hdr-framing, hdr-nosniff, hdr-referrer, hdr-permissions, hdr-coop, hdr-corp and auth-api-gated are **no** in `conformance/void-model.toml` (see X-02). The tool runs only on the machine where someone starts it, for curating synthetic training data.",
+      "options": [
+        {
+          "key": "a",
+          "text": "Accept as is: loopback only, no sign-in, no self-check page. Re-assess in 90 days or if the tool is ever hosted."
+        },
+        {
+          "key": "b",
+          "text": "Put a small local reverse proxy in front of it that adds the headers. It adds a moving part for one user."
+        },
+        {
+          "key": "c",
+          "text": "Retire the web tool. The physics config is edited by hand or with a command-line script instead."
+        }
+      ],
+      "recommended": "a",
+      "if_ignored": "Option a stays in force: the tool keeps working as now, on loopback."
     }
   ],
   "phases": [
