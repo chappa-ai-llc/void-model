@@ -61,6 +61,14 @@ A HUMOTO `.pkl` holding anything other than plain data and NumPy arrays now stop
 `refusing to load <module>.<name> from a pickle file`. If a legitimate file triggers this, convert it
 to plain data (lists, dicts, arrays). Do not widen the allow-list to code-bearing types.
 
+## Removed: unused reward models
+
+`videox_fun/reward/` (inherited from VideoX-Fun; nothing in this repository imported it) was deleted. It
+downloaded weights it could not verify: Hugging Face models without a pinned revision (Bandit B615), a
+checkpoint from an object-storage bucket checked only by MD5, and a `.pth` from a GitHub `main` branch
+with no checksum. If reward-guided training is added later, pin every model to a commit and every file
+to a SHA-256.
+
 ## Removed: unauthenticated web API and Gradio UI
 
 `videox_fun/api/` and `videox_fun/ui/` (inherited from VideoX-Fun) were deleted. They were not
@@ -88,14 +96,26 @@ It now clones this repository.
 
 - SAM2 is installed from its Git repository (README, "Install SAM2") without a pinned commit. Pin it
   when the project settles on a SAM2 version.
-- The MPS reward model download (`videox_fun/reward/reward_fn.py`) is checked by MD5, as upstream
-  publishes it. Replace with SHA-256 when a trusted hash is available. Training-only code path.
 
 ## Checking it yourself
 
 ```bash
 python -m unittest discover -s tests -v
+bandit -r . -x ./scratchpad,./tests -ll
 ```
+
+On 2026-11-13 Bandit 1.9.4 found no high or medium issues. The low ones are expected here: `random` for data
+augmentation, `subprocess` with argument lists (ffmpeg, Blender), `assert`, and `import pickle` in the safe
+loaders.
+
+### GitHub alerts
+
+- **Dependabot:** on. The office's dependency report reads the alerts each run. On 2026-11-13 15:38Z (main@aa5bc1e)
+  it read them with no error and found none open; 72 were open when the project was adopted.
+- **Code scanning:** CodeQL would need GitHub Actions, which chappa.ai does not use. Bandit (above) and the
+  tests stand in for it.
+- **Secret scanning:** gitleaks over the full history (47 commits on 2026-11-13) found nothing; the secret
+  gate checks every push.
 
 ## Reporting a vulnerability
 

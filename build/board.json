@@ -13,7 +13,7 @@
       "steps": [
         "Open https://github.com/chappa-ai-llc/void-model/settings on your phone or desktop.",
         "Under **General**, scroll to **Features** and tick **Issues**.",
-        "While there, open **Settings › Code security** (https://github.com/chappa-ai-llc/void-model/settings/security_analysis) and check that **Dependabot alerts** is on."
+        "While there, open **Settings \u203a Code security** (https://github.com/chappa-ai-llc/void-model/settings/security_analysis) and check that **Dependabot alerts** is on."
       ],
       "verify": "https://github.com/chappa-ai-llc/void-model/issues opens instead of returning to the code page.",
       "blocks": "Filing the decord and Kubric follow-ups as issues (they are timeline rows until then)."
@@ -28,8 +28,21 @@
       "title": "Security sweep: patched dependencies, unsafe loading fixed, dead web API removed",
       "plain": "All 82 open advisories (5 critical, 43 high) are fixed by upgrading 7 packages, and the code no longer loads untrusted pickles or checkpoints unsafely.",
       "chosen": "Pillow 13.0.0, torch 2.14.1 / torchvision 0.29.1, transformers 5.21.1, diffusers 0.42.1, accelerate 1.15.0, datasets 5.1.0, requests 2.34.2 (each release at least two weeks old, 0 OSV advisories across all 144 resolved packages). `torch.load` always uses `weights_only=True`; pickles go through a restricted loader; `trust_remote_code` removed. The unauthenticated FastAPI/Gradio code in `videox_fun/api` and `videox_fun/ui` was deleted: it was not importable (missing `controller` module), and it let any caller load any model path, fetch any URL and read any file. The notebook now clones this repo instead of upstream's vulnerable pins. Details: `docs/SECURITY.md`.",
-      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC §6.1). Removing broken, unreachable network code is safer than hardening it.",
+      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC \u00a76.1). Removing broken, unreachable network code is safer than hardening it.",
       "if_ignored": "Nothing to do: confirm, or overturn if you want a demo UI back (it would be rebuilt with a login and the self-check page)."
+    },
+    {
+      "id": "X-02",
+      "kind": "decided",
+      "filed": "2026-11-13",
+      "checked": "2026-11-13",
+      "urgency": "whenever",
+      "blocking": "no",
+      "title": "The Security Self-Check standard does not apply to void-model",
+      "plain": "void-model ships no web front end, so it does not adopt the self-check page and badge.",
+      "chosen": "No conformance file in `security-self-check`. STANDARD.md \u00a71.1 says a product without a web front end does not adopt; CONTRIBUTING.md says it gets no port issue. The one page in the repo, the Streamlit physics review tool in `data_generation/`, is a local data-curation helper. It is bound to 127.0.0.1 with XSRF protection on and is not part of the product. The deleted API and Gradio UI (X-01) were the only network surface.",
+      "why": "`ssc.py gaps void-model` reports no conformance file. That is the standard's own answer for a project without a front end, not a gap.",
+      "if_ignored": "Nothing to do. Overturn if you want the review tool assessed like arxiv-daily's loopback dashboard. The agent would then write `conformance/void-model.toml`."
     }
   ],
   "phases": [
@@ -61,7 +74,7 @@
       "end": "2027-02-11",
       "pct": 0,
       "status": "blocked",
-      "note": "1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634… (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
+      "note": "1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634\u2026 (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
     },
     {
       "id": "SEC-pillow-f5f3db",
