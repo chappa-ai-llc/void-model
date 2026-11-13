@@ -37,7 +37,7 @@ class ImprovedAestheticPredictor(nn.Module):
         if predictor_path is None or not os.path.exists(predictor_path):
             download_url(URL, torch.hub.get_dir(), FILENAME, md5=MD5)
             predictor_path = os.path.join(torch.hub.get_dir(), FILENAME)
-        state_dict = torch.load(predictor_path, map_location="cpu")
+        state_dict = torch.load(predictor_path, map_location="cpu", weights_only=True)
         self.predictor.load_state_dict(state_dict)
         self.eval()
     

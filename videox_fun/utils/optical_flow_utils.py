@@ -62,7 +62,7 @@ class RAFTFlowExtractor:
             self.model = raft_large(weights=weights, progress=True)
         else:
             self.model = raft_large(weights=None)
-            self.model.load_state_dict(torch.load(model_weights))
+            self.model.load_state_dict(torch.load(model_weights, map_location="cpu", weights_only=True))
 
         self.model = self.model.to(device)
         self.model.eval()

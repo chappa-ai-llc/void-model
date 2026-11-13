@@ -15,7 +15,7 @@ import torch
 import torchvision.transforms as transforms
 from decord import VideoReader
 from einops import rearrange
-from func_timeout import FunctionTimedOut, func_timeout
+from ..utils.timeout import FunctionTimedOut, func_timeout
 from PIL import Image
 from torch.utils.data import BatchSampler, Sampler
 from torch.utils.data.dataset import Dataset

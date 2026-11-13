@@ -123,7 +123,7 @@ def convert_v2_5_from_siglip(
     if predictor_name_or_path is None or not os.path.exists(predictor_name_or_path):
         state_dict = torch.hub.load_state_dict_from_url(URL, map_location="cpu")
     else:
-        state_dict = torch.load(predictor_name_or_path, map_location="cpu")
+        state_dict = torch.load(predictor_name_or_path, map_location="cpu", weights_only=True)
 
     assert isinstance(state_dict, OrderedDict)
 
