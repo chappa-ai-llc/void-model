@@ -1,24 +1,6 @@
 {
   "cards": [
     {
-      "id": "A-01",
-      "kind": "action",
-      "filed": "2026-11-13",
-      "checked": "2026-11-13",
-      "urgency": "soon",
-      "blocking": "partly",
-      "title": "Turn on GitHub Issues for void-model",
-      "plain": "GitHub turns Issues off on forks, so this repo has no tracker for bugs and security items. The global rule wants Git Issues.",
-      "why": "Every bug and security finding should have an issue that the fixing commit closes. The agent's GitHub App token cannot change repository settings.",
-      "steps": [
-        "Open https://github.com/chappa-ai-llc/void-model/settings on your phone or desktop.",
-        "Under **General**, scroll to **Features** and tick **Issues**.",
-        "While there, open **Settings › Code security** (https://github.com/chappa-ai-llc/void-model/settings/security_analysis) and check that **Dependabot alerts** is on."
-      ],
-      "verify": "https://github.com/chappa-ai-llc/void-model/issues opens instead of returning to the code page.",
-      "blocks": "Filing the decord and Kubric follow-ups as issues (they are timeline rows until then)."
-    },
-    {
       "id": "X-01",
       "kind": "decided",
       "filed": "2026-11-13",
@@ -28,8 +10,9 @@
       "title": "Security sweep: patched dependencies, unsafe loading fixed, dead web API removed",
       "plain": "All 82 open advisories (5 critical, 43 high) are fixed by upgrading 7 packages, and the code no longer loads untrusted pickles or checkpoints unsafely.",
       "chosen": "Pillow 13.0.0, torch 2.14.1 / torchvision 0.29.1, transformers 5.21.1, diffusers 0.42.1, accelerate 1.15.0, datasets 5.1.0, requests 2.34.2 (each release at least two weeks old, 0 OSV advisories across all 144 resolved packages). `torch.load` always uses `weights_only=True`; pickles go through a restricted loader; `trust_remote_code` removed. The unauthenticated FastAPI/Gradio code in `videox_fun/api` and `videox_fun/ui` was deleted: it was not importable (missing `controller` module), and it let any caller load any model path, fetch any URL and read any file. The notebook now clones this repo instead of upstream's vulnerable pins. Details: `docs/SECURITY.md`.",
-      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC §6.1). Removing broken, unreachable network code is safer than hardening it.",
-      "if_ignored": "Nothing to do: confirm, or overturn if you want a demo UI back (it would be rebuilt with a login and the self-check page)."
+      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC \u00a76.1). Removing broken, unreachable network code is safer than hardening it.",
+      "if_ignored": "Nothing to do: confirm, or overturn if you want a demo UI back (it would be rebuilt with a login and the self-check page).",
+      "issue": 1
     },
     {
       "id": "X-02",
@@ -41,7 +24,7 @@
       "title": "The Streamlit review tool was assessed against the Security Self-Check standard",
       "plain": "void-model has no hosted web front end. Its one web page, a local review tool, was assessed in full.",
       "chosen": "`conformance/void-model.toml` in `security-self-check` covers the Streamlit physics review tool in `data_generation/`, from the code and a live run on 2026-11-13: 12 yes, 9 no, 84 n/a. It listens on 127.0.0.1 only. Other web sites cannot rebind it or open its WebSocket (403 on both, `server.allowedHosts` and the Origin check). It leaks no version and no file. The 9 no rows are the security headers Streamlit cannot send (CSP, frame protection, nosniff and four more) and the lack of a sign-in; D-01 asks what to do about them.",
-      "why": "The standard covers every web front end (STANDARD.md §1.1). Assessing the one page is more honest than calling the repo out of scope.",
+      "why": "The standard covers every web front end (STANDARD.md \u00a71.1). Assessing the one page is more honest than calling the repo out of scope.",
       "if_ignored": "Nothing to do: confirm, or overturn with a note."
     },
     {
@@ -69,7 +52,8 @@
         }
       ],
       "recommended": "a",
-      "if_ignored": "Option a stays in force: the tool keeps working as now, on loopback."
+      "if_ignored": "Option a stays in force: the tool keeps working as now, on loopback.",
+      "issue": 3
     },
     {
       "id": "A-02",
@@ -95,7 +79,8 @@
         "Press **Approve**. The agent then starts it and reports the result here."
       ],
       "verify": "The task shows **active** on the Tasks page. Its first run ends with `PASS` in the log.",
-      "blocks": "Confirming the upgrade on the DGX Spark (docs/SECURITY.md, Known items)."
+      "blocks": "Confirming the upgrade on the DGX Spark (issue #2).",
+      "issue": 2
     }
   ],
   "phases": [
@@ -127,7 +112,7 @@
       "end": "2026-11-13",
       "pct": 100,
       "status": "done",
-      "note": "Gone from the report on 2026-11-13. 1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634… (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
+      "note": "Gone from the report on 2026-11-13. 1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634\u2026 (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
     },
     {
       "id": "SEC-pillow-f5f3db",
@@ -279,7 +264,7 @@
     {
       "id": "S3",
       "label": "Run the Kubric generator from Kubric's Docker image pinned by digest instead of PyPI kubric 0.1.1",
-      "note": "kubricdockerhub/kubruntu@sha256:a4152c80… (data_generation/README.md); exception dropped",
+      "note": "kubricdockerhub/kubruntu@sha256:a4152c80\u2026 (data_generation/README.md); exception dropped",
       "start": "2026-11-13",
       "end": "2026-11-13",
       "status": "done",
