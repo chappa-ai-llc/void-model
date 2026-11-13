@@ -70,6 +70,25 @@
       ],
       "recommended": "a",
       "if_ignored": "Option a stays in force: the tool keeps working as now, on loopback."
+    },
+    {
+      "id": "A-02",
+      "kind": "action",
+      "filed": "2026-11-13",
+      "checked": "2026-11-13",
+      "urgency": "soon",
+      "blocking": "partly",
+      "title": "Approve the void-model check on sparky-1",
+      "plain": "One approval lets the agent test the patched stack on the DGX Spark it is built for. The pod can only test on CPU.",
+      "why": "Every security upgrade passed 26 tests in the pod (CPU, x86). The real target is CPython 3.12 on aarch64 with CUDA. New tasks wait for your approval before any runner gets them.",
+      "steps": [
+        "Open https://build.chappa.ai/tasks on your phone.",
+        "Find **void-model-target-check** (runner sparky-1, GPU sparky-1 shared, 8 GB, manual, timeout 2 h).",
+        "Check its command. It fetches this repo at tag `v1.2.1-offline-arm64` into a temp folder and runs `tools/target_check.sh`. The temp folder is removed afterwards.",
+        "Press **Approve**. The agent then starts it and reports the result here."
+      ],
+      "verify": "The task shows **active** on the Tasks page. Its first run ends with `PASS` in the log.",
+      "blocks": "Confirming the upgrade on the DGX Spark (docs/SECURITY.md, Known items)."
     }
   ],
   "phases": [
