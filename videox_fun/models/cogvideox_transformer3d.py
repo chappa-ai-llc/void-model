@@ -115,7 +115,10 @@ class CogVideoXPatchEmbed(nn.Module):
             self.spatial_interpolation_scale,
             self.temporal_interpolation_scale,
         )
-        pos_embedding = torch.from_numpy(pos_embedding).flatten(0, 1)
+        # diffusers < 0.32 returned a NumPy array; newer releases return a torch tensor.
+        if not torch.is_tensor(pos_embedding):
+            pos_embedding = torch.from_numpy(pos_embedding)
+        pos_embedding = pos_embedding.flatten(0, 1)
         joint_pos_embedding = torch.zeros(
             1, self.max_text_seq_length + num_patches, self.embed_dim, requires_grad=False
         )
@@ -727,7 +730,7 @@ class CogVideoXTransformer3DModel(ModelMixin, ConfigMixin):
 
                 param_device = "cpu"
                 if os.path.exists(model_file):
-                    state_dict = torch.load(model_file, map_location="cpu")
+                    state_dict = torch.load(model_file, map_location="cpu", weights_only=True)
                 elif os.path.exists(model_file_safetensors):
                     from safetensors.torch import load_file, safe_open
                     state_dict = load_file(model_file_safetensors)
@@ -774,7 +777,7 @@ class CogVideoXTransformer3DModel(ModelMixin, ConfigMixin):
         
         model = cls.from_config(config, **transformer_additional_kwargs)
         if os.path.exists(model_file):
-            state_dict = torch.load(model_file, map_location="cpu")
+            state_dict = torch.load(model_file, map_location="cpu", weights_only=True)
         elif os.path.exists(model_file_safetensors):
             from safetensors.torch import load_file, safe_open
             state_dict = load_file(model_file_safetensors)

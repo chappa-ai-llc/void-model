@@ -7,8 +7,9 @@ You can then edit it to mark which objects should be ACTIVE (move) or PASSIVE (s
 
 import os
 import json
-import pickle
 from pathlib import Path
+
+from safe_pickle import safe_load  # HUMOTO .pkl files are downloaded data: never plain pickle.load
 
 def main():
     data_dir = "./humoto_release/humoto_0805"
@@ -53,7 +54,7 @@ def main():
 
         try:
             with open(pkl_file, 'rb') as f:
-                data = pickle.load(f)
+                data = safe_load(f)
 
             # Extract object names
             if 'objects' in data and isinstance(data['objects'], dict):

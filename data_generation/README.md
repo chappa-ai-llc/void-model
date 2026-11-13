@@ -37,8 +37,10 @@ Download PBR texture packs of your choice (e.g., from [ambientCG](https://ambien
 
 ### 5. Python Dependencies
 
+The versions are pinned in `requirements.txt`:
+
 ```bash
-pip install numpy Pillow tqdm pyyaml streamlit
+pip install -r requirements.txt
 ```
 
 ---
@@ -78,6 +80,8 @@ python generate_review_frames.py --data_dir ./humoto_characters_converted
 # Launch the interactive review UI
 streamlit run physics_review_ui.py
 ```
+
+The review UI has no login, so `.streamlit/config.toml` in this folder makes it listen on `127.0.0.1` only (start it from this folder, then open http://127.0.0.1:8501). To use it from another machine, forward the port over SSH (`ssh -L 8501:127.0.0.1:8501 <host>`) rather than changing the address.
 
 Or generate a fresh config template:
 ```bash
@@ -192,8 +196,10 @@ python kubric_variable_objects.py --num_pairs 10 --fast
 
 Kubric requires its own environment. See [Kubric installation](https://github.com/google-research/kubric#installation). Assets (KuBasic, GSO, HDRI Haven) are fetched automatically from Google Cloud Storage.
 
+The versions are pinned in `requirements-kubric.txt`:
+
 ```bash
-pip install kubric pybullet imageio imageio-ffmpeg
+pip install -r requirements-kubric.txt
 ```
 
 ---

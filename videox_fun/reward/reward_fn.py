@@ -159,7 +159,7 @@ class HPSReward(BaseReward):
             download_url(url, torch.hub.get_dir(), md5=md5)
             model_path = os.path.join(torch.hub.get_dir(), filename)
 
-        state_dict = torch.load(model_path, map_location="cpu")["state_dict"]
+        state_dict = torch.load(model_path, map_location="cpu", weights_only=True)["state_dict"]
         self.model.load_state_dict(state_dict)
         self.model.to(device=self.device, dtype=self.dtype)
         self.model.requires_grad_(False)
@@ -291,10 +291,10 @@ class MPSReward(BaseReward):
             download_url(url, torch.hub.get_dir(), md5=md5)
             model_path = os.path.join(torch.hub.get_dir(), filename)
 
-        self.tokenizer = AutoTokenizer.from_pretrained(processor_name_or_path, trust_remote_code=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(processor_name_or_path)
         config = AutoConfig.from_pretrained(processor_name_or_path)
         self.model = CLIPModel(config)
-        state_dict = torch.load(model_path, map_location="cpu")
+        state_dict = torch.load(model_path, map_location="cpu", weights_only=True)
         self.model.load_state_dict(state_dict, strict=False)
         self.model.to(device=self.device, dtype=self.dtype)
         self.model.requires_grad_(False)

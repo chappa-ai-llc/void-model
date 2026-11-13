@@ -6,6 +6,7 @@ This creates parallel datasets with character-specific animations.
 
 import os
 import sys
+import shutil
 import subprocess
 import json
 from pathlib import Path
@@ -56,14 +57,10 @@ def run_blender_script(script_path, args):
     """Run a Blender Python script with arguments."""
     cmd = ["blender", "--background", "--python", script_path, "--"] + args
 
-    # Check if blender command exists, if not use python directly with bpy
-    if subprocess.run(["which", "blender"], capture_output=True).returncode != 0:
-        # Use python with bpy import instead
-        cmd = ["python", "-c", f"""
-import sys
-sys.argv = {['script'] + args}
-exec(open('{script_path}').read())
-"""]
+    # Without a blender command, run the script with this Python (needs the bpy module).
+    # The path and arguments go in as argv entries, never spliced into code.
+    if shutil.which("blender") is None:
+        cmd = [sys.executable, script_path] + args
 
     result = subprocess.run(cmd, capture_output=True, text=True)
     return result.returncode == 0, result.stdout, result.stderr
@@ -134,7 +131,7 @@ def convert_sequence_for_character(sequence_name, character_name, character_fbx,
         src = os.path.join(step3_dir, item)
         dst = os.path.join(final_dir, item)
         if os.path.isfile(src):
-            subprocess.run(["cp", src, dst])
+            shutil.copy(src, dst)
 
     print(f"    ✓ Completed!")
     return True

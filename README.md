@@ -25,7 +25,7 @@ This is an enhanced distribution of the Netflix VOID model. Unlike the original,
   <a href="https://huggingface.co/papers/2604.02296" target="_blank" style="margin: 2px;">
     <img alt="Models" src="https://img.shields.io/badge/🤗%20HuggingFace-Paper-yellow" style="display: inline-block; vertical-align: middle;"/>
   </a>
-  <a href="https://colab.research.google.com/github/netflix/void-model/blob/main/notebook.ipynb" target="_blank" style="margin: 2px;">
+  <a href="https://colab.research.google.com/github/chappa-ai-llc/void-model/blob/main/notebook.ipynb" target="_blank" style="margin: 2px;">
     <img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" style="display: inline-block; vertical-align: middle;"/>
   </a>
 </div>
@@ -69,7 +69,7 @@ Place checkpoints anywhere and pass the path via `--config.video_model.transform
 
 The fastest way to try VOID is the included notebook — it handles setup, downloads the models, runs inference on a sample video, and displays the result:
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/netflix/void-model/blob/main/notebook.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chappa-ai-llc/void-model/blob/main/notebook.ipynb)
 
 > **Note:** Requires a GPU with 40GB+ VRAM (e.g., A100).
 
@@ -84,10 +84,12 @@ Install Base Requirements
 pip install -r requirements.txt
 ```
 
+Every version is pinned and checked against known advisories. Read [docs/SECURITY.md](docs/SECURITY.md) before changing one, and for how checkpoints and pickle files are loaded safely.
+
 Offline VLM Reasoning (Gemma 4)
 This fork uses local weights instead of the Gemini API. Download the reasoning model:
 ```bash
-huggingface-cli download google/gemma-4-31b-it
+hf download google/gemma-4-31b-it
 ```
 (No Google AI API Key required for this fork)
 
@@ -100,7 +102,7 @@ cd sam2 && pip install -e .
 
 Download Base Inpainting Model
 ```bash
-huggingface-cli download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP \
+hf download alibaba-pai/CogVideoX-Fun-V1.5-5b-InP \
     --local-dir ./CogVideoX-Fun-V1.5-5b-InP
 ```
 

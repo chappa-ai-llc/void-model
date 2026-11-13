@@ -14,7 +14,6 @@ import random
 import json
 import numpy as np
 import math
-import pickle
 
 # Add script directory to path to import blender_utils
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -31,6 +30,9 @@ PHYSICS_CONFIG_FILE = os.path.join(script_dir, "physics_config.json")
 
 # Import texture mapping module
 import object_texture_mapping
+
+# Pickled inputs are downloaded data: load them without running code
+from safe_pickle import safe_load
 
 # Import Blender Python API
 try:
@@ -1500,7 +1502,7 @@ def process_sequence(sequence_path, output_dir, args):
 
         print(f"Loading pre-computed human vertices from {vertices_file}")
         with open(vertices_file, 'rb') as f:
-            human_data = pickle.load(f)
+            human_data = safe_load(f)
 
         all_human_verts = human_data['vertices']  # [num_frames, num_verts, 3]
         human_faces = human_data['faces']          # [num_faces, 3]

@@ -20,7 +20,7 @@ import gc
 import logging
 import math
 import os
-import pickle
+import json
 import random
 import shutil
 import sys
@@ -76,6 +76,7 @@ from videox_fun.pipeline.pipeline_cogvideox_fun_inpaint import (
     add_noise_to_reference_video, get_3d_rotary_pos_embed,
     get_resize_crop_region_for_grid)
 from videox_fun.utils.discrete_sampler import DiscreteSampling
+from videox_fun.utils.sampler_state import load_sampler_state
 from videox_fun.utils.lora_utils import create_network, merge_lora, unmerge_lora
 from videox_fun.utils.utils import (get_image_to_video_latent,
                                    get_video_to_video_latent, save_videos_grid)
@@ -749,7 +750,7 @@ def main():
     if args.report_to == "wandb" and args.hub_token is not None:
         raise ValueError(
             "You cannot use both --report_to=wandb and --hub_token due to a security risk of exposing your token."
-            " Please use `huggingface-cli login` to authenticate with the Hub."
+            " Please use `hf auth login` to authenticate with the Hub."
         )
 
     if args.non_ema_revision is not None:
@@ -868,7 +869,7 @@ def main():
             from safetensors.torch import load_file, safe_open
             state_dict = load_file(args.transformer_path)
         else:
-            state_dict = torch.load(args.transformer_path, map_location="cpu")
+            state_dict = torch.load(args.transformer_path, map_location="cpu", weights_only=True)
         state_dict = state_dict["state_dict"] if "state_dict" in state_dict else state_dict
 
         if args.use_vae_mask or args.shuffle_mask:
@@ -928,7 +929,7 @@ def main():
             from safetensors.torch import load_file, safe_open
             state_dict = load_file(args.vae_path)
         else:
-            state_dict = torch.load(args.vae_path, map_location="cpu")
+            state_dict = torch.load(args.vae_path, map_location="cpu", weights_only=True)
         state_dict = state_dict["state_dict"] if "state_dict" in state_dict else state_dict
 
         m, u = vae.load_state_dict(state_dict, strict=False)
@@ -968,8 +969,8 @@ def main():
                 if not args.use_deepspeed:
                     weights.pop()
 
-                with open(os.path.join(output_dir, "sampler_pos_start.pkl"), 'wb') as file:
-                    pickle.dump([batch_sampler.sampler._pos_start, first_epoch], file)
+                with open(os.path.join(output_dir, "sampler_pos_start.json"), 'w') as file:
+                    json.dump([int(batch_sampler.sampler._pos_start), int(first_epoch)], file)
 
         def load_model_hook(models, input_dir):
             if args.use_ema:
@@ -998,12 +999,11 @@ def main():
                 model.load_state_dict(load_model.state_dict())
                 del load_model
 
-            pkl_path = os.path.join(input_dir, "sampler_pos_start.pkl")
-            if os.path.exists(pkl_path):
-                with open(pkl_path, 'rb') as file:
-                    loaded_number, _ = pickle.load(file)
-                    batch_sampler.sampler._pos_start = max(loaded_number - args.dataloader_num_workers * accelerator.num_processes * 2, 0)
-                print(f"Load pkl from {pkl_path}. Get loaded_number = {loaded_number}.")
+            sampler_state = load_sampler_state(input_dir)
+            if sampler_state is not None:
+                loaded_number, _ = sampler_state
+                batch_sampler.sampler._pos_start = max(loaded_number - args.dataloader_num_workers * accelerator.num_processes * 2, 0)
+                print(f"Loaded sampler state from {input_dir}. Get loaded_number = {loaded_number}.")
 
         accelerator.register_save_state_pre_hook(save_model_hook)
         accelerator.register_load_state_pre_hook(load_model_hook)
@@ -1470,13 +1470,12 @@ def main():
 
             initial_global_step = global_step
 
-            pkl_path = os.path.join(os.path.join(args.output_dir, path), "sampler_pos_start.pkl")
-            if os.path.exists(pkl_path):
-                with open(pkl_path, 'rb') as file:
-                    _, first_epoch = pickle.load(file)
+            sampler_state = load_sampler_state(os.path.join(args.output_dir, path))
+            if sampler_state is not None:
+                _, first_epoch = sampler_state
             else:
                 first_epoch = global_step // num_update_steps_per_epoch
-            print(f"Load pkl from {pkl_path}. Get first_epoch = {first_epoch}.")
+            print(f"Resuming sampler state from {path}. Get first_epoch = {first_epoch}.")
 
             accelerator.print(f"Resuming from checkpoint {path}")
             accelerator.load_state(os.path.join(args.output_dir, path))
