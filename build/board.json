@@ -13,7 +13,7 @@
       "steps": [
         "Open https://github.com/chappa-ai-llc/void-model/settings on your phone or desktop.",
         "Under **General**, scroll to **Features** and tick **Issues**.",
-        "While there, open **Settings \u203a Code security** (https://github.com/chappa-ai-llc/void-model/settings/security_analysis) and check that **Dependabot alerts** is on."
+        "While there, open **Settings › Code security** (https://github.com/chappa-ai-llc/void-model/settings/security_analysis) and check that **Dependabot alerts** is on."
       ],
       "verify": "https://github.com/chappa-ai-llc/void-model/issues opens instead of returning to the code page.",
       "blocks": "Filing the decord and Kubric follow-ups as issues (they are timeline rows until then)."
@@ -28,11 +28,161 @@
       "title": "Security sweep: patched dependencies, unsafe loading fixed, dead web API removed",
       "plain": "All 82 open advisories (5 critical, 43 high) are fixed by upgrading 7 packages, and the code no longer loads untrusted pickles or checkpoints unsafely.",
       "chosen": "Pillow 13.0.0, torch 2.14.1 / torchvision 0.29.1, transformers 5.21.1, diffusers 0.42.1, accelerate 1.15.0, datasets 5.1.0, requests 2.34.2 (each release at least two weeks old, 0 OSV advisories across all 144 resolved packages). `torch.load` always uses `weights_only=True`; pickles go through a restricted loader; `trust_remote_code` removed. The unauthenticated FastAPI/Gradio code in `videox_fun/api` and `videox_fun/ui` was deleted: it was not importable (missing `controller` module), and it let any caller load any model path, fetch any URL and read any file. The notebook now clones this repo instead of upstream's vulnerable pins. Details: `docs/SECURITY.md`.",
-      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC \u00a76.1). Removing broken, unreachable network code is safer than hardening it.",
+      "why": "Security rows are due 2 days (critical) and 7 days (high) from first sight (SPEC §6.1). Removing broken, unreachable network code is safer than hardening it.",
       "if_ignored": "Nothing to do: confirm, or overturn if you want a demo UI back (it would be rebuilt with a login and the self-check page)."
     }
   ],
   "phases": [
+    {
+      "id": "SEC-unmaintained-kubric-666400",
+      "group": "Security",
+      "label": "Excepted unmaintained: kubric 0.1.1 in data_generation/requirements-kubric.txt until 2027-02-11",
+      "start": "2026-11-13",
+      "end": "2027-02-11",
+      "pct": 0,
+      "status": "blocked",
+      "note": "no release since 2021-08-25 (newest 0.1.1), over 3 years. Accepted until 2027-02-11: kubric 0.1.1 (PyPI, 2021) has no OSV advisory (checked 2026-11-13). It runs only in the optional offline synthetic-data generator (data_generation/kubric_variable_objects.py), never in inference or training. Upstream ships Kubric as its Docker image (kubricdockerhub/kubruntu) rather than PyPI releases; moving the generator to that image pinned by digest is tracked on the void-model BUILD board."
+    },
+    {
+      "id": "SEC-unmaintained-decord-fc7b17",
+      "group": "Security",
+      "label": "Excepted unmaintained: decord 0.6.0 in requirements.txt until 2027-02-11",
+      "start": "2026-11-13",
+      "end": "2027-02-11",
+      "pct": 0,
+      "status": "blocked",
+      "note": "no release since 2021-06-14 (newest 0.6.0), over 3 years. Accepted until 2027-02-11: decord 0.6.0 (last release 2021) has no OSV advisory (checked 2026-11-13). It reads training videos only (videox_fun/data/dataset_*.py and the MPS reward), never at inference. Replacing it with a maintained decoder (torchcodec or PyAV) changes the training data path and needs a GPU training check: tracked on the void-model BUILD board."
+    },
+    {
+      "id": "SEC-unpinned-requirements-tx-b4dfb8",
+      "group": "Security",
+      "label": "Excepted unpinned: requirements.txt in requirements.txt until 2027-02-11",
+      "start": "2026-11-13",
+      "end": "2027-02-11",
+      "pct": 0,
+      "status": "blocked",
+      "note": "1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634… (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
+    },
+    {
+      "id": "SEC-pillow-f5f3db",
+      "group": "Security",
+      "label": "Fixed: pillow 11.3.0 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 60 advisories: GHSA-332p-7hrc-92wf, GHSA-5x8w-8jj5-q52h, GHSA-8g5g-8vmr-9782, GHSA-v9pv-5gc8-w2m6, GHSA-w889-685w-c8fh, GHSA-22hg-r758-rrw9 (+54); fixed in 13.0.0, 12.3.0, 12.1.1, 12.2.0. Due 2026-11-15 (critical: 2 days from first tracked)."
+    },
+    {
+      "id": "SEC-diffusers-07b866",
+      "group": "Security",
+      "label": "Fixed: diffusers 0.33.1 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 3 advisories: GHSA-7wx4-6vff-v64p, GHSA-98h9-4798-4q5v, PYSEC-2026-41; fixed in 0.38.0. Due 2026-11-20 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-torch-cacc8a",
+      "group": "Security",
+      "label": "Fixed: torch 2.7.1 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 9 advisories: GHSA-63cw-57p8-fm3p, GHSA-887c-mr87-cxwp, GHSA-vgrw-7cvw-pwgx, GHSA-qfhq-4f3w-5fph, GHSA-rrmf-rvhw-rf47, PYSEC-2025-203 (+3); fixed in 2.10.0, 2.8.0, 2.9.1, 2.13.0. Due 2026-11-20 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-transformers-baa1af",
+      "group": "Security",
+      "label": "Fixed: transformers 4.57.1 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 7 advisories: GHSA-29pf-2h5f-8g72, GHSA-fgcw-684q-jj6r, GHSA-x9r9-c232-4q39, GHSA-xrqw-3rrv-vx5w, GHSA-69w3-r845-3855, PYSEC-2025-217 (+1); fixed in 5.3.0, 5.5.0, 5.10.0, 5.0.0rc3. Due 2026-11-20 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-accelerate-01d3f9",
+      "group": "Security",
+      "label": "Fixed: accelerate 1.12.0 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-13 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-datasets-f75832",
+      "group": "Security",
+      "label": "Fixed: datasets 4.0.0 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 1 advisory: GHSA-379c-qx7v-6h59; fixed in 5.0.1. Due 2026-12-13 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-requests-23bfba",
+      "group": "Security",
+      "label": "Fixed: requests 2.32.5 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. 1 advisory: GHSA-gc5v-m9x4-r6x2; fixed in 2.33.0. Due 2026-12-13 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-unmaintained-func-timeou-ccfac1",
+      "group": "Security",
+      "label": "Fixed: func-timeout 4.3.5 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: no release since 2019-08-19 (newest 4.3.5), over 3 years. Replace it, or record an exception `unmaintained:func-timeout`. Due 2027-02-11 (90 days from first tracked)."
+    },
+    {
+      "id": "SEC-unmaintained-tomesd-6f49b2",
+      "group": "Security",
+      "label": "Fixed: tomesd 0.1.3 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: no release since 2023-05-14 (newest 0.1.3), over 3 years. Replace it, or record an exception `unmaintained:tomesd`. Due 2027-02-11 (90 days from first tracked)."
+    },
+    {
+      "id": "SEC-unmaintained-torchsde-1d1901",
+      "group": "Security",
+      "label": "Fixed: torchsde 0.2.6 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: no release since 2023-09-26 (newest 0.2.6), over 3 years. Replace it, or record an exception `unmaintained:torchsde`. Due 2027-02-11 (90 days from first tracked)."
+    },
+    {
+      "id": "SEC-archived-torchsde-9f9e97",
+      "group": "Security",
+      "label": "Fixed: torchsde 0.2.6 in requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: source repository github.com/google-research/torchsde is archived (read-only). Replace it, or record an exception `archived:torchsde`. Due 2027-02-11 (90 days from first tracked)."
+    },
+    {
+      "id": "SEC-unpinned-requirements-tx-dd1d80",
+      "group": "Security",
+      "label": "Fixed: Pin the requirements in data_generation/requirements.txt",
+      "start": "2026-11-13",
+      "end": "2026-11-13",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: 10 requirement(s) not pinned with == (numpy, pillow, tqdm, pyyaml, streamlit, opencv-python-headless, kubric, pybullet and 2 more): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Pin them, or record an exception `unpinned:requirements.txt`. Due 2026-12-13 (30 days from first tracked)."
+    },
     {
       "id": "P0",
       "label": "Onboard: MDD from the design doc, README and first board",
@@ -68,136 +218,6 @@
       "end": "2027-02-11",
       "status": "planned",
       "pct": 0
-    },
-    {
-      "id": "SEC-pillow-f5f3db",
-      "group": "Security",
-      "label": "Fix critical: pillow 11.3.0 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "60 advisories: GHSA-332p-7hrc-92wf, GHSA-5x8w-8jj5-q52h, GHSA-8g5g-8vmr-9782, GHSA-v9pv-5gc8-w2m6, GHSA-w889-685w-c8fh, GHSA-22hg-r758-rrw9 (+54); fixed in 13.0.0, 12.3.0, 12.1.1, 12.2.0. Due 2026-11-15 (critical: 2 days from first tracked)."
-    },
-    {
-      "id": "SEC-diffusers-07b866",
-      "group": "Security",
-      "label": "Fix high: diffusers 0.33.1 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-11-20",
-      "pct": 0,
-      "status": "active",
-      "note": "3 advisories: GHSA-7wx4-6vff-v64p, GHSA-98h9-4798-4q5v, PYSEC-2026-41; fixed in 0.38.0. Due 2026-11-20 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-torch-cacc8a",
-      "group": "Security",
-      "label": "Fix high: torch 2.7.1 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-11-20",
-      "pct": 0,
-      "status": "active",
-      "note": "9 advisories: GHSA-63cw-57p8-fm3p, GHSA-887c-mr87-cxwp, GHSA-vgrw-7cvw-pwgx, GHSA-qfhq-4f3w-5fph, GHSA-rrmf-rvhw-rf47, PYSEC-2025-203 (+3); fixed in 2.10.0, 2.8.0, 2.9.1, 2.13.0. Due 2026-11-20 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-transformers-baa1af",
-      "group": "Security",
-      "label": "Fix high: transformers 4.57.1 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-11-20",
-      "pct": 0,
-      "status": "active",
-      "note": "7 advisories: GHSA-29pf-2h5f-8g72, GHSA-fgcw-684q-jj6r, GHSA-x9r9-c232-4q39, GHSA-xrqw-3rrv-vx5w, GHSA-69w3-r845-3855, PYSEC-2025-217 (+1); fixed in 5.3.0, 5.5.0, 5.10.0, 5.0.0rc3. Due 2026-11-20 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-accelerate-01d3f9",
-      "group": "Security",
-      "label": "Fix medium: accelerate 1.12.0 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-12-13",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-13 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-datasets-f75832",
-      "group": "Security",
-      "label": "Fix medium: datasets 4.0.0 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-12-13",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-379c-qx7v-6h59; fixed in 5.0.1. Due 2026-12-13 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-requests-23bfba",
-      "group": "Security",
-      "label": "Fix medium: requests 2.32.5 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-12-13",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-gc5v-m9x4-r6x2; fixed in 2.33.0. Due 2026-12-13 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-unmaintained-func-timeou-ccfac1",
-      "group": "Security",
-      "label": "Replace unmaintained: func-timeout 4.3.5 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2027-02-11",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: no release since 2019-08-19 (newest 4.3.5), over 3 years. Replace it, or record an exception `unmaintained:func-timeout`. Due 2027-02-11 (90 days from first tracked)."
-    },
-    {
-      "id": "SEC-unmaintained-tomesd-6f49b2",
-      "group": "Security",
-      "label": "Replace unmaintained: tomesd 0.1.3 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2027-02-11",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: no release since 2023-05-14 (newest 0.1.3), over 3 years. Replace it, or record an exception `unmaintained:tomesd`. Due 2027-02-11 (90 days from first tracked)."
-    },
-    {
-      "id": "SEC-unmaintained-torchsde-1d1901",
-      "group": "Security",
-      "label": "Replace unmaintained: torchsde 0.2.6 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2027-02-11",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: no release since 2023-09-26 (newest 0.2.6), over 3 years. Replace it, or record an exception `unmaintained:torchsde`. Due 2027-02-11 (90 days from first tracked)."
-    },
-    {
-      "id": "SEC-archived-torchsde-9f9e97",
-      "group": "Security",
-      "label": "Replace archived: torchsde 0.2.6 in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2027-02-11",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: source repository github.com/google-research/torchsde is archived (read-only). Replace it, or record an exception `archived:torchsde`. Due 2027-02-11 (90 days from first tracked)."
-    },
-    {
-      "id": "SEC-unpinned-requirements-tx-dd1d80",
-      "group": "Security",
-      "label": "Pin the requirements in data_generation/requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-12-13",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: 10 requirement(s) not pinned with == (numpy, pillow, tqdm, pyyaml, streamlit, opencv-python-headless, kubric, pybullet and 2 more): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Pin them, or record an exception `unpinned:requirements.txt`. Due 2026-12-13 (30 days from first tracked)."
-    },
-    {
-      "id": "SEC-unpinned-requirements-tx-b4dfb8",
-      "group": "Security",
-      "label": "Pin the requirements in requirements.txt",
-      "start": "2026-11-13",
-      "end": "2026-12-13",
-      "pct": 0,
-      "status": "active",
-      "note": "Maintenance, not an advisory: 1 requirement(s) not pinned with == (https): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Pin them, or record an exception `unpinned:requirements.txt`. Due 2026-12-13 (30 days from first tracked)."
     }
   ],
   "about": {
