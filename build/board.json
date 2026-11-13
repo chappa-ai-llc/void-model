@@ -84,7 +84,14 @@
       "steps": [
         "Open https://build.chappa.ai/tasks on your phone.",
         "Find **void-model-target-check** (runner sparky-1, GPU sparky-1 shared, 8 GB, manual, timeout 2 h).",
-        "Check its command. It fetches this repo at tag `v1.2.1-offline-arm64` into a temp folder and runs `tools/target_check.sh`. The temp folder is removed afterwards.",
+        {
+          "text": "Check its command",
+          "sub": [
+            "It fetches this repo at tag `v1.2.1-offline-arm64` into a temp folder.",
+            "It runs `tools/target_check.sh`.",
+            "It removes the temp folder afterwards."
+          ]
+        },
         "Press **Approve**. The agent then starts it and reports the result here."
       ],
       "verify": "The task shows **active** on the Tasks page. Its first run ends with `PASS` in the log.",
