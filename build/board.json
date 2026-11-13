@@ -29,7 +29,7 @@
       "end": "2026-11-13",
       "pct": 100,
       "status": "done",
-      "note": "Gone from the report on 2026-11-13. 1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634\u2026 (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
+      "note": "Gone from the report on 2026-11-13. 1 requirement(s) not pinned with == (decord): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Accepted until 2027-02-11: The one line dep-audit reads as unpinned is the ARM64 decord wheel, a PEP 508 direct reference to the project's own release asset (v1.0.0-offline-arm64) pinned by #sha256=22c1b634… (stricter than ==: pip refuses any other file). Every other line is ==. void-model tests/test_security.py fails on any new unpinned line, so this exception cannot hide one. Ends when decord is replaced by a maintained decoder (see unmaintained:decord)."
     },
     {
       "id": "SEC-pillow-f5f3db",
@@ -40,15 +40,6 @@
       "pct": 100,
       "status": "done",
       "note": "Gone from the report on 2026-11-13. 60 advisories: GHSA-332p-7hrc-92wf, GHSA-5x8w-8jj5-q52h, GHSA-8g5g-8vmr-9782, GHSA-v9pv-5gc8-w2m6, GHSA-w889-685w-c8fh, GHSA-22hg-r758-rrw9 (+54); fixed in 13.0.0, 12.3.0, 12.1.1, 12.2.0. Due 2026-11-15 (critical: 2 days from first tracked)."
-    },
-    {
-      "id": "S4",
-      "label": "Re-assess the Streamlit review tool's accepted self-check exceptions (headers, sign-in; D-01 a)",
-      "note": "security-self-check conformance/void-model.toml; void-model#3",
-      "start": "2027-01-28",
-      "end": "2027-02-11",
-      "status": "planned",
-      "pct": 0
     },
     {
       "id": "SEC-diffusers-07b866",
@@ -161,6 +152,15 @@
       "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: 10 requirement(s) not pinned with == (numpy, pillow, tqdm, pyyaml, streamlit, opencv-python-headless, kubric, pybullet and 2 more): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Pin them, or record an exception `unpinned:requirements.txt`. Due 2026-12-13 (30 days from first tracked)."
     },
     {
+      "id": "S4",
+      "label": "Re-assess the Streamlit review tool's accepted self-check exceptions (headers, sign-in; D-01 a)",
+      "note": "security-self-check conformance/void-model.toml; void-model#3",
+      "start": "2027-01-28",
+      "end": "2027-02-11",
+      "status": "planned",
+      "pct": 0
+    },
+    {
       "id": "P0",
       "label": "Onboard: MDD from the design doc, README and first board",
       "note": "From docs/build-kickoff.md",
@@ -190,7 +190,7 @@
     {
       "id": "S3",
       "label": "Run the Kubric generator from Kubric's Docker image pinned by digest instead of PyPI kubric 0.1.1",
-      "note": "kubricdockerhub/kubruntu@sha256:a4152c80\u2026 (data_generation/README.md); exception dropped",
+      "note": "kubricdockerhub/kubruntu@sha256:a4152c80… (data_generation/README.md); exception dropped",
       "start": "2026-11-13",
       "end": "2026-11-13",
       "status": "done",
