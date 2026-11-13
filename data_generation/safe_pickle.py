@@ -22,6 +22,8 @@ ALLOWED_GLOBALS = frozenset({
     ("builtins", "float"), ("builtins", "complex"), ("builtins", "bool"),
     ("builtins", "slice"), ("builtins", "range"),
     ("collections", "OrderedDict"), ("collections", "defaultdict"),
+    # Protocol 2 stores bytes as codecs.encode(str, "latin1"); torch weights_only allows it too.
+    ("_codecs", "encode"),
     # NumPy array, scalar and dtype reconstruction (NumPy 1.x and 2.x paths).
     ("numpy", "ndarray"), ("numpy", "dtype"),
     ("numpy.core.multiarray", "_reconstruct"), ("numpy.core.multiarray", "scalar"),

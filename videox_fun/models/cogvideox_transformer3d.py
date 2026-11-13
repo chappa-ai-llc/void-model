@@ -115,7 +115,10 @@ class CogVideoXPatchEmbed(nn.Module):
             self.spatial_interpolation_scale,
             self.temporal_interpolation_scale,
         )
-        pos_embedding = torch.from_numpy(pos_embedding).flatten(0, 1)
+        # diffusers < 0.32 returned a NumPy array; newer releases return a torch tensor.
+        if not torch.is_tensor(pos_embedding):
+            pos_embedding = torch.from_numpy(pos_embedding)
+        pos_embedding = pos_embedding.flatten(0, 1)
         joint_pos_embedding = torch.zeros(
             1, self.max_text_seq_length + num_patches, self.embed_dim, requires_grad=False
         )
