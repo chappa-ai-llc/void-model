@@ -84,7 +84,7 @@ Install Base Requirements
 pip install -r requirements.txt
 ```
 
-Every version is pinned and checked against known advisories. Read [docs/SECURITY.md](docs/SECURITY.md) before changing one, and for how checkpoints and pickle files are loaded safely.
+Every version is pinned and checked against known advisories. Read [docs/SECURITY.md](docs/SECURITY.md) before changing one, and for how checkpoints and pickle files are loaded safely. The design of this edition (pipelines, interfaces, release process) is in [docs/MDD-void-model.md](docs/MDD-void-model.md).
 
 Offline VLM Reasoning (Gemma 4)
 The mask pipeline's stage 2 asks a local OpenAI-compatible server instead of the Gemini API, so footage stays on the machine and no Google AI API key is needed. Download the reasoning model:

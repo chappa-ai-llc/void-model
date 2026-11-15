@@ -1,9 +1,8 @@
 {
   "docs": [
-    "docs/build-kickoff.md",
+    "docs/MDD-void-model.md",
     "docs/SECURITY.md",
     "CHANGELOG.md"
   ],
-  "kickoff": "docs/build-kickoff.md",
   "project": "void-model"
 }

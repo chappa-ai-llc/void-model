@@ -211,11 +211,11 @@
     {
       "id": "P0",
       "label": "Onboard: MDD from the design doc, README and first board",
-      "note": "From docs/build-kickoff.md; mask pipeline fixed first (#4)",
+      "note": "docs/MDD-void-model.md; standards pass reported on the forum; mask pipeline fixed first (#4)",
       "start": "2026-11-08",
-      "end": "2026-11-22",
-      "status": "active",
-      "pct": 40
+      "end": "2026-11-15",
+      "status": "done",
+      "pct": 100
     },
     {
       "id": "S1",
