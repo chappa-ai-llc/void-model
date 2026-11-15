@@ -87,11 +87,15 @@ pip install -r requirements.txt
 Every version is pinned and checked against known advisories. Read [docs/SECURITY.md](docs/SECURITY.md) before changing one, and for how checkpoints and pickle files are loaded safely.
 
 Offline VLM Reasoning (Gemma 4)
-This fork uses local weights instead of the Gemini API. Download the reasoning model:
+The mask pipeline's stage 2 asks a local OpenAI-compatible server instead of the Gemini API, so footage stays on the machine and no Google AI API key is needed. Download the reasoning model:
 ```bash
 hf download google/gemma-4-31b-it
 ```
-(No Google AI API Key required for this fork)
+Then serve it on loopback; the default is vLLM on `127.0.0.1:8000` (vLLM is installed separately, not from `requirements.txt`):
+```bash
+vllm serve google/gemma-4-31b-it --host 127.0.0.1 --port 8000
+```
+Ollama, llama.cpp and Google's Gemini API (opt-in) are also supported: see [VLM-MASK-REASONER/README.md, "VLM server"](VLM-MASK-REASONER/README.md#3-vlm-server).
 
 Install SAM2
 SAM2 is required for the initial mask segmentation. SAM2 publishes no release tags, so install it pinned to a commit (the head of its `main` branch on 2026-11-13, dated 2024-12-16):
@@ -186,7 +190,7 @@ The quadmask encodes four semantic regions per pixel:
 <details>
 <summary><strong>🎭 Stage 1 — Generate Masks</strong></summary>
 
-The `VLM-MASK-REASONER/` pipeline generates quadmasks from raw videos using SAM2 segmentation and a VLM (Gemini) for reasoning about interaction-affected regions.
+The `VLM-MASK-REASONER/` pipeline generates quadmasks from raw videos using SAM2 segmentation and a vision-language model (local Gemma 4 31B by default) for reasoning about interaction-affected regions.
 
 ### 🖱️ Step 0 — Select points (GUI)
 
@@ -221,8 +225,11 @@ Optional flags:
 ```bash
 bash VLM-MASK-REASONER/run_pipeline.sh my_config_points.json \
     --sam2-checkpoint path/to/sam2_hiera_large.pt \
-    --device cuda
+    --device cuda \
+    --vlm-backend vllm --vlm-server 127.0.0.1 --vlm-port 8000 --vlm-model google/gemma-4-31b-it
 ```
+
+The `--vlm-*` values shown are the defaults (a local vLLM server).
 
 This runs the following stages in order:
 
@@ -340,7 +347,6 @@ Save overwrites `quadmask_0.mp4` in place. Rerun inference from Pass 1 after sav
 <details>
 <summary><strong>🏋️ Training</strong></summary>
 
-### Training Data Generation
 ### Training Data Generation
 
 Due to licensing constraints on the underlying datasets, we release the **data generation code** instead of the pre-built training data. The code produces paired counterfactual videos (with/without object, plus quad-masks) from two sources:

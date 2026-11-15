@@ -3,6 +3,34 @@
 All notable changes to the Chappa AI offline edition of VOID. Versions are tagged on `main` as
 `v<semver>-offline-arm64`.
 
+## 1.3.0-offline-arm64 — 2026-11-15
+
+### Fixed
+- The mask pipeline's stage 2 (`VLM-MASK-REASONER/stage2_vlm_analysis.py`) runs again. It crashed on
+  start, and needed a Google key even for a local server (#4).
+- `openai`, which stage 2 imports, is now in `requirements.txt` (`openai==3.42.1`) and the hash lock (with
+  `jiter` 0.18.0 and `sniffio` 1.3.1; 146 wheels).
+
+### Changed
+- Stage 2 asks a local VLM server by default: vLLM on `127.0.0.1:8000`, model `google/gemma-4-31b-it`.
+  Footage stays on the machine and no key is needed. `--vlm-backend ollama|llama.cpp|gemini`,
+  `--vlm-server`, `--vlm-port` and `--vlm-model` choose another; `run_pipeline.sh` passes them through.
+- Local servers get the frame grids only; only Gemini is also sent the whole video.
+- `test_gemini_video.py` checks whichever backend stage 2 will use.
+
+### Security
+- Google's Gemini API is opt-in, and its key is read from the file named by `GEMINI_API_KEY_FILE`.
+- Removed `stage2_vlm_analysis_cf.py`, which sent footage to upstream's private Cloudflare AI gateway.
+- The reasoner README installs SAM2 at the same pinned commit as the main README.
+
+### Upgrading
+- Start a VLM server before the pipeline (`vllm serve google/gemma-4-31b-it --host 127.0.0.1 --port 8000`),
+  or pass `--vlm-backend gemini` to keep using Google.
+- If you use Gemini, move the key into a file and set `GEMINI_API_KEY_FILE`. `GEMINI_API_KEY` still
+  works, with a warning.
+- The 1.2.x option names (`--analysis-self-host-type`, `-server`, `-port`, `-model`, `--model`) still work.
+- Reinstall from `requirements.txt` or the lock to get `openai`.
+
 ## 1.2.1-offline-arm64 — 2026-11-13
 
 ### Added

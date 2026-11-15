@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Quick Gemini API smoke test — samples a few frames from a video and asks a
-simple question. Use this to verify your API key works before running the
-full pipeline.
+Quick VLM smoke test — samples a few frames from a video and asks a simple
+question. Use this to check that the VLM backend stage 2 will use answers
+before running the full pipeline. It takes the same --vlm-* options as stage 2
+(default: local vLLM on 127.0.0.1:8000 serving google/gemma-4-31b-it).
 
 Usage:
-    export GEMINI_API_KEY="your_aistudio_key"
     python test_gemini_video.py --video path/to/video.mp4
+    python test_gemini_video.py --video path/to/video.mp4 --vlm-backend gemini   # needs GEMINI_API_KEY_FILE
 """
 
 import os
@@ -17,10 +18,9 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-import openai
+import vlm_backend
 
 
-FREE_TIER_MODEL = "gemini-2.0-flash"
 NUM_FRAMES = 4  # keep low for free tier rate limits
 
 
@@ -45,15 +45,16 @@ def sample_frames(video_path: str, n: int = NUM_FRAMES):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Gemini API smoke test with video frames")
+    parser = argparse.ArgumentParser(description="VLM backend smoke test with video frames")
     parser.add_argument("--video", required=True, help="Path to a video file")
-    parser.add_argument("--model", default=FREE_TIER_MODEL, help="Gemini model to use")
+    vlm_backend.add_arguments(parser)
     parser.add_argument("--frames", type=int, default=NUM_FRAMES, help="Number of frames to sample")
     args = parser.parse_args()
 
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        print("ERROR: GEMINI_API_KEY environment variable not set")
+    try:
+        settings = vlm_backend.resolve_settings(args.vlm_backend, args.vlm_server, args.vlm_port, args.vlm_model)
+    except (RuntimeError, ValueError) as e:
+        print(f"ERROR: {e}")
         sys.exit(1)
 
     video_path = Path(args.video)
@@ -62,18 +63,16 @@ def main():
         sys.exit(1)
 
     print(f"Video:  {video_path.name}")
-    print(f"Model:  {args.model}")
+    print(f"Server: {settings.backend} at {settings.base_url}")
+    print(f"Model:  {settings.model}")
     print(f"Frames: {args.frames}")
     print()
 
     print(f"Sampling {args.frames} frames...")
     data_urls = sample_frames(str(video_path), args.frames)
-    print(f"Got {len(data_urls)} frames. Sending to Gemini...")
+    print(f"Got {len(data_urls)} frames. Sending to {settings.backend}...")
 
-    client = openai.OpenAI(
-        api_key=api_key,
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    )
+    client = vlm_backend.make_client(settings)
 
     content = [
         {"type": "image_url", "image_url": {"url": url}} for url in data_urls
@@ -84,14 +83,14 @@ def main():
     })
 
     response = client.chat.completions.create(
-        model=args.model,
+        model=settings.model,
         messages=[{"role": "user", "content": content}],
     )
 
-    print("\n--- Gemini response ---")
+    print("\n--- VLM response ---")
     print(response.choices[0].message.content)
-    print("-----------------------")
-    print("\n✅ API key works!")
+    print("--------------------")
+    print("\n✅ The VLM backend answers.")
 
 
 if __name__ == "__main__":

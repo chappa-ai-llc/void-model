@@ -1,6 +1,6 @@
 # VLM Mask Reasoner — Mask Generation Pipeline
 
-Generates quadmasks for video inpainting by combining user-guided SAM2 segmentation with VLM (Gemini) scene reasoning. The output `quadmask_0.mp4` encodes four semantic layers that the inpainting model uses to understand what to remove and what to preserve.
+Generates quadmasks for video inpainting by combining user-guided SAM2 segmentation with scene reasoning by a vision-language model (VLM). By default the VLM is Gemma 4 31B on a local server, so footage never leaves the machine. The output `quadmask_0.mp4` encodes four semantic layers that the inpainting model uses to understand what to remove and what to preserve.
 
 ---
 
@@ -46,13 +46,16 @@ Optional flags:
 ```bash
 bash run_pipeline.sh <config_points.json> \
     --sam2-checkpoint ../sam2_hiera_large.pt \
-    --device cuda
+    --device cuda \
+    --vlm-backend vllm --vlm-server 127.0.0.1 --vlm-port 8000 --vlm-model google/gemma-4-31b-it
 ```
+
+The `--vlm-*` values above are the defaults. See [Installation, step 3](#3-vlm-server) for the choices.
 
 This runs four stages automatically:
 
 1. **Stage 1 — SAM2 Segmentation:** Propagates your point clicks into a per-frame black mask for the primary object.
-2. **Stage 2 — VLM Analysis (Gemini):** Analyzes the scene to identify affected objects — things like shadows, reflections, or items the primary object is interacting with.
+2. **Stage 2 — VLM Analysis:** Asks the VLM server (local by default) to analyze the scene to identify affected objects — things like shadows, reflections, or items the primary object is interacting with.
 3. **Stage 3 — Grey Mask Generation:** Produces a grey mask track for the affected objects identified in Stage 2.
 4. **Stage 4 — Combine into Quadmask:** Merges the black and grey masks into the final `quadmask_0.mp4`.
 
@@ -86,11 +89,7 @@ pip install -r requirements.txt
 
 ### 2. SAM2
 
-SAM2 must be installed separately (it is not on PyPI):
-
-```bash
-pip install git+https://github.com/facebookresearch/segment-anything-2.git
-```
+SAM2 must be installed separately (it is not on PyPI). It publishes no release tags, so install it pinned to a commit, exactly as in the main README's Setup section (`sam2` at `2b90b9f5ceec907a1c18123530e92e794ad901a4`, the head of its `main` branch on 2026-11-13, dated 2024-12-16).
 
 Then download the SAM2 checkpoint. The pipeline defaults to `sam2_hiera_large.pt` one level above this directory:
 
@@ -105,12 +104,35 @@ If you place the checkpoint elsewhere, pass it explicitly:
 bash run_pipeline.sh config_points.json --sam2-checkpoint /path/to/sam2_hiera_large.pt
 ```
 
-> SAM2 requires **Python ≥ 3.10** and **PyTorch ≥ 2.3.1** with CUDA. See the [SAM2 repo](https://github.com/facebookresearch/segment-anything-2) for full system requirements.
+> SAM2 requires **Python ≥ 3.10** and **PyTorch ≥ 2.3.1** with CUDA. See the [SAM2 repo](https://github.com/facebookresearch/sam2) for full system requirements.
 
-### 3. Gemini API key
+### 3. VLM server
 
-Stage 2 uses the Gemini VLM. Export your API key before running the pipeline:
+Stage 2 sends frame grids to an OpenAI-compatible server and reads back JSON. The default is a vLLM server on this machine, serving `google/gemma-4-31b-it` (the model the main README's Setup section downloads). vLLM is not in `requirements.txt`; install it separately and bind it to loopback:
 
 ```bash
-export GEMINI_API_KEY="your_key_here"
+vllm serve google/gemma-4-31b-it --host 127.0.0.1 --port 8000
 ```
+
+| `--vlm-backend` | Default address | Default `--vlm-model` | Key |
+|---|---|---|---|
+| `vllm` (default) | `127.0.0.1:8000` | `google/gemma-4-31b-it` | none |
+| `ollama` | `127.0.0.1:11434` | `google/gemma-4-31b-it`: pass the tag `ollama list` shows instead | none |
+| `llama.cpp` | `127.0.0.1:8080` | `google/gemma-4-31b-it`: pass the name your server reports | none |
+| `gemini` | Google's API | `gemini-3-pro-preview` | the file named by `GEMINI_API_KEY_FILE` |
+
+Use `--vlm-server` and `--vlm-port` for a server on another host. Local backends get the frame grids only; only `gemini` is also sent the whole video.
+
+Check that the server answers before a long run (same `--vlm-*` options as the pipeline):
+
+```bash
+python test_gemini_video.py --video path/to/video.mp4
+```
+
+**Google's Gemini API (opt-in).** `--vlm-backend gemini` sends your footage to Google. Keep the key in a file only you can read, and name the file:
+
+```bash
+export GEMINI_API_KEY_FILE="$HOME/.config/void/gemini_api_key"
+```
+
+The older `GEMINI_API_KEY` variable still works but prints a warning, because an environment variable is visible to child processes.
