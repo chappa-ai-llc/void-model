@@ -1,6 +1,36 @@
 {
   "cards": [
     {
+      "id": "A-03",
+      "kind": "action",
+      "filed": "2026-11-15",
+      "checked": "2026-11-15",
+      "urgency": "soon",
+      "blocking": "partly",
+      "title": "Approve the changed void-model check on sparky-1 (once, for every future release)",
+      "plain": "Release 1.3.0 added three packages to the install set for the DGX Spark. One approval lets the agent test it there. After that, the check follows each new release with no further approval.",
+      "why": "The check you approved on 2026-11-13 (A-02) was pinned to tag `v1.2.1-offline-arm64`, so each release needed a new approval. A changed command waits for you before any runner gets it.",
+      "steps": [
+        "Open https://build.chappa.ai/tasks on your phone.",
+        "Find **void-model-target-check** on sparky-1, marked **awaiting**.",
+        {
+          "text": "Check its command",
+          "sub": [
+            "It asks GitHub for this repo's newest tag named `v*-offline-arm64`, and stops if there is none.",
+            "It fetches the repo at that tag into a temp folder and runs `tools/target_check.sh`.",
+            "It removes the temp folder afterwards."
+          ]
+        },
+        "Press **Approve**. The agent then starts it and reports the result here."
+      ],
+      "verify": "The task shows **active** on the Tasks page. Its next run prints `release v1.3.0-offline-arm64` and ends with `PASS`.",
+      "blocks": "Confirming release 1.3.0-offline-arm64 on the DGX Spark (issue #4).",
+      "issue": 4,
+      "rests_on": [
+        "release:void-model"
+      ]
+    },
+    {
       "id": "X-03",
       "kind": "decided",
       "filed": "2026-11-15",
