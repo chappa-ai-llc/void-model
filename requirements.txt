@@ -49,6 +49,9 @@ sentencepiece==0.2.1
 ftfy==6.1.1
 beautifulsoup4==4.13.5
 
+# Mask pipeline stage 2: OpenAI-compatible client for the local VLM server (vLLM, Ollama, llama.cpp)
+openai==3.42.1
+
 # Misc
 requests==2.34.2
 packaging==25.0

@@ -1,5 +1,23 @@
 {
-  "cards": [],
+  "cards": [
+    {
+      "id": "X-03",
+      "kind": "decided",
+      "filed": "2026-11-15",
+      "checked": "2026-11-15",
+      "urgency": "whenever",
+      "blocking": "no",
+      "title": "Mask pipeline: a local Gemma server is the default; Google's Gemini API is opt-in",
+      "plain": "One pipeline step asks an AI model what a removal affects. It now uses a model on your own machine by default, so footage is not sent to Google.",
+      "chosen": "Stage 2 of the mask pipeline asks vLLM on `127.0.0.1:8000` serving `google/gemma-4-31b-it` (the model the README already downloads). Ollama, llama.cpp and Gemini are one option away (`--vlm-backend`); `run_pipeline.sh` passes it through. Gemini's key is read from the file named by `GEMINI_API_KEY_FILE`. Until this change stage 2 crashed on start and needed a Google key even for a local server (issue #4). Released in 1.3.0-offline-arm64. Details: `docs/SECURITY.md`, \"Mask pipeline: where footage goes\".",
+      "why": "The project's purpose is to run fully offline (README). vLLM's address was already the code's fallback for local servers, and it serves the Hugging Face model id unchanged, so no extra name has to be configured.",
+      "if_ignored": "Nothing to do: confirm, or overturn if you want Ollama (or Gemini) as the default instead.",
+      "issue": 4,
+      "rests_on": [
+        "release:void-model"
+      ]
+    }
+  ],
   "phases": [
     {
       "id": "SEC-unmaintained-kubric-666400",
@@ -163,11 +181,11 @@
     {
       "id": "P0",
       "label": "Onboard: MDD from the design doc, README and first board",
-      "note": "From docs/build-kickoff.md",
+      "note": "From docs/build-kickoff.md; mask pipeline fixed first (#4)",
       "start": "2026-11-08",
       "end": "2026-11-22",
       "status": "active",
-      "pct": 20
+      "pct": 40
     },
     {
       "id": "S1",

@@ -1,6 +1,6 @@
 # Security — void-model
 
-As of 2026-11-13 (main after the security sweep; see `git log`). This page is the reference for how the
+As of 2026-11-15 (release 1.3.0-offline-arm64; see `git log`). This page is the reference for how the
 repository keeps its dependencies and code safe, and what was changed in the 2026-11-13 sweep.
 
 ## What this project exposes
@@ -11,9 +11,9 @@ It ships **no hosted web front end and no network service**. The main risks are 
 model checkpoints, pickled datasets and the Python packages it installs. The one interactive page,
 `data_generation/physics_review_ui.py` (Streamlit), runs on this machine only (see below).
 
-Because there is no hosted web front end, the chappa.ai Security Self-Check standard
-(`chappa-ai-llc/security-self-check`), which audits a public front door, does not apply. Re-assess this
-if a web UI or API is ever added.
+There is no hosted web front end, so there is no public front door for the chappa.ai Security Self-Check
+standard (`chappa-ai-llc/security-self-check`) to audit. The local Streamlit tool was still assessed
+against it (see "The Streamlit review tool"). Re-assess if a web UI or API is ever hosted.
 
 ## Dependencies
 
@@ -49,8 +49,9 @@ Removed: `decord` and the PyPI `kubric` (both unmaintained since 2021; see above
 `func-timeout` (unmaintained since 2019; replaced by `videox_fun/utils/timeout.py`, standard library
 only), and the commented-out Gradio 3.x line (80+ advisories).
 
-The full resolved set for the target (CPython 3.12, Linux aarch64), 144 packages including every
-transitive one, had no OSV advisory on 2026-11-13.
+The full resolved set for the target (CPython 3.12, Linux aarch64), 147 packages including every
+transitive one, had no OSV advisory on 2026-11-15 (144 on 2026-11-13; `openai`, `jiter` and `sniffio`
+were added in 1.3.0 for the mask pipeline, below).
 
 ## Loading files safely
 
@@ -109,6 +110,24 @@ Streamlit cannot send security headers (CSP, frame protection, `nosniff`), and t
 The owner accepted both on 2026-11-13 (board D-01, option a; issue #3). They are recorded exceptions
 in the conformance file, to be re-assessed by 2027-02-11, or as soon as the tool is hosted anywhere but loopback.
 
+## Mask pipeline: where footage goes
+
+Stage 2 of `VLM-MASK-REASONER/` sends frame grids of your video to a vision-language model. By default
+that is a local OpenAI-compatible server (vLLM on `127.0.0.1:8000`, model `google/gemma-4-31b-it`), so
+footage stays on the machine and no key is needed (`VLM-MASK-REASONER/vlm_backend.py`).
+
+- Sending footage to Google is opt-in: `--vlm-backend gemini`. Only then is the whole video sent as well.
+- The Google key is read from the file named by `GEMINI_API_KEY_FILE`. The old `GEMINI_API_KEY`
+  environment variable still works but prints a warning.
+- `--vlm-server` takes a bare host name or address; the URL is built from it, never taken whole.
+- Bind the VLM server to loopback (`vllm serve ... --host 127.0.0.1`); vLLM listens on all interfaces
+  unless told otherwise.
+- `stage2_vlm_analysis_cf.py` was removed in 1.3.0: it sent footage to upstream's private Cloudflare AI
+  gateway (an address hard-coded in the script), which no user of this edition can use.
+
+`tests/test_vlm_backend.py` pins this down. Issue #4 has the history: before 1.3.0 stage 2 crashed on
+start, and needed a Google key even for a local server.
+
 ## Notebook
 
 `notebook.ipynb` used to clone the upstream `netflix/void-model`, which installs upstream's old pins.
@@ -122,7 +141,7 @@ head of `main` on 2026-11-13). At that commit SAM2 loads its checkpoint with
 
 ## Known items left open
 
-- None in the code or dependencies as of 2026-11-13.
+- None in the code or dependencies as of 2026-11-15.
 - The target check passed on sparky-1 on 2026-11-13 (BUILD office task `void-model-target-check`, run 350, tag
   v1.2.1-offline-arm64): Python 3.12.3 on aarch64, the 143-wheel hash lock installed, `pip check` clean, tests
   26/26, torch 2.14.1+cu130 with CUDA 13.0 on the NVIDIA GB10, and the CUDA smoke test OK.
@@ -140,7 +159,7 @@ loaders.
 
 ### On the target (DGX Spark)
 
-`requirements-lock-linux-aarch64-cp312.txt` is the exact install set for CPython 3.12 on Linux aarch64: 143 wheels,
+`requirements-lock-linux-aarch64-cp312.txt` is the exact install set for CPython 3.12 on Linux aarch64: 146 wheels,
 each pinned by version and SHA-256, every one checked on OSV.dev (deepspeed is left out because it ships only as
 source). `tools/target_check.sh` installs it into a fresh venv with `--require-hashes --no-deps`, runs `pip check`,
 the test suite and a CUDA smoke test (tiny transformer with rotary embeddings and VAE in bf16 on the GPU), and
