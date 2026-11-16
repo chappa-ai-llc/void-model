@@ -1,5 +1,5 @@
 # void-model (VOID, Chappa AI Offline Edition) — Master Design Document
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
 **Owner:** chappa.ai LLC
 **As of:** 2026-11-15, release `v1.3.0-offline-arm64` (main@e163d2d and later)
@@ -104,12 +104,10 @@ samplers, utilities. Inherited from VideoX-Fun and trimmed (§10.3).
 | 1.1.1 | 2026-11-13 | Unused reward models removed; Bandit clean at medium and high. |
 | 1.2.0 | 2026-11-13 | PyAV replaces decord; Kubric runs in its pinned Docker image. |
 | 1.2.1 | 2026-11-13 | Hash lock for the Spark target and `tools/target_check.sh`; Streamlit DNS-rebinding guard. Passed on sparky-1. |
-| 1.3.0 | 2026-11-15 | Mask stage 2 fixed and offline by default (local vLLM and Gemma); `openai` pinned (#4). |
+| 1.3.0 | 2026-11-15 | Mask stage 2 fixed and offline by default (local vLLM and Gemma); `openai` pinned (#4). Passed on sparky-1. |
 
 §3.2 **Next** (the BUILD board's timeline is the live copy: https://build.chappa.ai/p/void-model):
 
-- P0, onboarding into the BUILD office: this MDD, the standards pass, the forum report.
-- Confirm 1.3.0 on the DGX Spark once the changed check is approved (board A-03).
 - S4, by 2027-02-11: re-assess the Streamlit tool's accepted self-check exceptions (D-01 a, issue #3).
 - An end-to-end run of the mask pipeline against a live Gemma server on a Spark (§10.1).
 
@@ -275,8 +273,9 @@ for mask generation (§5.4).
 
 §8.3 **Target check.** `tools/target_check.sh` installs the hash lock into a fresh venv (`--require-hashes
 --no-deps --only-binary=:all:`), runs `pip check`, the tests, and a CUDA smoke test, then prints PASS or FAIL.
-The BUILD office task `void-model-target-check` runs it on sparky-1 (manual, GPU lease shared 8 GB). Since
-2026-11-15 it checks the newest `v*-offline-arm64` tag; that command change awaits approval (board A-03).
+The BUILD office task `void-model-target-check` runs it on sparky-1 (manual, GPU lease shared 8 GB). It checks
+the newest `v*-offline-arm64` tag (approved 2026-11-16). Last pass: run 446 on 2026-11-16, tag
+v1.3.0-offline-arm64, 44 tests, CUDA smoke OK on the NVIDIA GB10 (`docs/SECURITY.md`, "Known items left open").
 
 §8.4 **Releases.** CHANGELOG section, then an annotated tag `v<semver>-offline-arm64` on main, pushed. There is
 no deployed service and no release recipe in the office's Releases page; a release is the tag. GitHub release
@@ -359,4 +358,5 @@ Actions. Work in a branch; the orchestrator merges.
 
 | Version | Date | Change |
 |---|---|---|
+| 1.0.1 | 2026-11-16 | §8.3: the target check follows the newest tag; run 446 passed on v1.3.0-offline-arm64. |
 | 1.0.0 | 2026-11-15 | First MDD, written from README, `docs/SECURITY.md`, CHANGELOG and the code at release 1.3.0 (BUILD onboarding, docs/build-kickoff.md step 3). |

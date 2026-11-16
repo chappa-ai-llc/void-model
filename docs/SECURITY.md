@@ -141,10 +141,11 @@ head of `main` on 2026-11-13). At that commit SAM2 loads its checkpoint with
 
 ## Known items left open
 
-- None in the code or dependencies as of 2026-11-15.
-- The target check passed on sparky-1 on 2026-11-13 (BUILD office task `void-model-target-check`, run 350, tag
-  v1.2.1-offline-arm64): Python 3.12.3 on aarch64, the 143-wheel hash lock installed, `pip check` clean, tests
-  26/26, torch 2.14.1+cu130 with CUDA 13.0 on the NVIDIA GB10, and the CUDA smoke test OK.
+- None in the code or dependencies as of 2026-11-16 (office dependency report 2026-11-16T07:04Z: 0 to fix).
+- The target check passed on sparky-1 on 2026-11-16 (BUILD office task `void-model-target-check`, run 446, tag
+  v1.3.0-offline-arm64): Python 3.12.3 on aarch64, the 146-wheel hash lock installed, `pip check` clean, tests
+  44/44, torch 2.14.1+cu130 with CUDA 13.0 on the NVIDIA GB10, and the CUDA smoke test OK. The previous pass was
+  run 350 on 2026-11-13 (tag v1.2.1-offline-arm64).
 
 ## Checking it yourself
 
@@ -163,8 +164,8 @@ loaders.
 each pinned by version and SHA-256, every one checked on OSV.dev (deepspeed is left out because it ships only as
 source). `tools/target_check.sh` installs it into a fresh venv with `--require-hashes --no-deps`, runs `pip check`,
 the test suite and a CUDA smoke test (tiny transformer with rotary embeddings and VAE in bf16 on the GPU), and
-prints PASS or FAIL. The BUILD office task `void-model-target-check` runs it on sparky-1 once the owner approves
-it on the Tasks page.
+prints PASS or FAIL. The BUILD office task `void-model-target-check` runs it on sparky-1 against the newest
+`v*-offline-arm64` tag (approved by the owner on the Tasks page; a change to its command needs a new approval).
 
 ```bash
 bash tools/target_check.sh
