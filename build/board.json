@@ -12,24 +12,6 @@
       "note": "Gone from the report on 2026-11-13. no release since 2021-08-25 (newest 0.1.1), over 3 years. Accepted until 2027-02-11: kubric 0.1.1 (PyPI, 2021) has no OSV advisory (checked 2026-11-13). It runs only in the optional offline synthetic-data generator (data_generation/kubric_variable_objects.py), never in inference or training. Upstream ships Kubric as its Docker image (kubricdockerhub/kubruntu) rather than PyPI releases; moving the generator to that image pinned by digest is tracked on the void-model BUILD board."
     },
     {
-      "id": "R1",
-      "label": "Release 1.3.0 (mask stage 2 offline by default) confirmed on the DGX Spark",
-      "note": "target check run 446 on sparky-1, 44 tests and CUDA smoke OK; #4",
-      "start": "2026-11-15",
-      "end": "2026-11-16",
-      "status": "done",
-      "pct": 100
-    },
-    {
-      "id": "E1",
-      "label": "One end-to-end mask pipeline run against a local Gemma server on a Spark",
-      "note": "MDD §10.1; needs a vLLM server with google/gemma-4-31b-it on sparky-1 and a new task approval",
-      "start": "2026-11-17",
-      "end": "2026-11-30",
-      "status": "planned",
-      "pct": 0
-    },
-    {
       "id": "SEC-unmaintained-decord-fc7b17",
       "group": "Security",
       "label": "Fixed: decord 0.6.0 in requirements.txt until 2027-02-11",
@@ -168,6 +150,24 @@
       "pct": 100,
       "status": "done",
       "note": "Gone from the report on 2026-11-13. Maintenance, not an advisory: 10 requirement(s) not pinned with == (numpy, pillow, tqdm, pyyaml, streamlit, opencv-python-headless, kubric, pybullet and 2 more): their versions are not known, so OSV was not asked about them. Pin each with ==, or install from a lockfile. Pin them, or record an exception `unpinned:requirements.txt`. Due 2026-12-13 (30 days from first tracked)."
+    },
+    {
+      "id": "R1",
+      "label": "Release 1.3.0 (mask stage 2 offline by default) confirmed on the DGX Spark",
+      "note": "target check run 446 on sparky-1, 44 tests and CUDA smoke OK; #4",
+      "start": "2026-11-15",
+      "end": "2026-11-16",
+      "status": "done",
+      "pct": 100
+    },
+    {
+      "id": "E1",
+      "label": "One end-to-end mask pipeline run against a local Gemma server on a Spark",
+      "note": "MDD §10.1; needs a vLLM server with google/gemma-4-31b-it on sparky-1 and a new task approval",
+      "start": "2026-11-17",
+      "end": "2026-11-30",
+      "status": "planned",
+      "pct": 0
     },
     {
       "id": "S4",
